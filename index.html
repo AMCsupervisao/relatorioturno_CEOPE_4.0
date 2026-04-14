@@ -239,7 +239,7 @@ body{font-family:'IBM Plex Sans',sans-serif;background:var(--navy);color:var(--t
       <button class="bpdf" onclick="gerarPDF()"><i class="fas fa-file-pdf"></i> PDF</button>
       <button id="btnLimpar" class="bcarregar" onclick="limparTudo()" style="display:none;background:rgba(239,68,68,0.15);border-color:rgba(239,68,68,0.4);color:#f87171;"><i class="fas fa-trash"></i> Limpar</button>
       <button id="btnSenhas" class="bcarregar" onclick="abrirSenhas()" style="display:none;"><i class="fas fa-key"></i> Senhas</button>
-      <button class="bsalvar" id="btnSalvarFixo" onclick="salvarNaNuvem()" style="display:none;margin-left:auto;"><i class="fas fa-cloud-upload-alt"></i> Salvar</button>
+
     </div>
   </div>
 
@@ -464,8 +464,7 @@ function initApp(){
   const btnS = document.getElementById('btnSenhas');
   if (btnS) btnS.style.display = G.role === 'admin' ? 'inline-flex' : 'none';
   // Mostrar botão salvar fixo para admin/supervisor
-  const btnSF = document.getElementById('btnSalvarFixo');
-  if (btnSF) btnSF.style.display = ['admin','supervisor'].includes(G.role) ? 'inline-flex' : 'none';
+
   const btnL = document.getElementById('btnLimpar');
   if (btnL) btnL.style.display = ['admin','supervisor'].includes(G.role) ? 'inline-flex' : 'none';
   if(G.autoTimer)clearInterval(G.autoTimer);
@@ -514,7 +513,18 @@ function desbloquear(){
 // ══════════════════════════════════════════════
 // NAVEGAÇÃO DE DATA/TURNO
 // ══════════════════════════════════════════════
-function navData(d){G.data=new Date(G.data);G.data.setDate(G.data.getDate()+d);setDataInput();onDataChange();}
+function navData(d){
+  const novaData=new Date(G.data);
+  novaData.setDate(novaData.getDate()+d);
+  const hoje=isoData(new Date());
+  if(isoData(novaData)>hoje){
+    toast('Não é possível criar relatório para datas futuras.','err');
+    return;
+  }
+  G.data=novaData;
+  setDataInput();
+  onDataChange();
+}
 function goHoje(){G.data=new Date();setDataInput();onDataChange();}
 function setDataInput(){
   const hoje=isoData(new Date());
@@ -528,11 +538,13 @@ function onDataChange(){
   const hoje=isoData(new Date());
   if(v>hoje){
     toast('Não é possível criar relatório para datas futuras.','err');
-    setDataInput(); // voltar para data atual
+    // Forçar volta para data anterior — não avança
+    G.data=G.data||new Date();
+    setDataInput();
     return;
   }
   G.data=localDate(v);
-  G.temAlteracaoLocal=false; // forçar recarregamento
+  G.temAlteracaoLocal=false;
   G.desbloqueado=false;
   configurarModo();
   carregarRelatorio(true);
@@ -579,6 +591,11 @@ async function carregarRelatorio(manual,silent){
 }
 
 async function salvarNaNuvem(){
+  const hoje=isoData(new Date());
+  if(isoData(G.data)>hoje){
+    toast('Não é possível salvar relatório para datas futuras.','err');
+    return;
+  }
   const dados=coletarDados();
   document.getElementById('saveInfo').textContent='Salvando...';
   try{
@@ -607,6 +624,8 @@ function agendarAutoSave(){
 }
 
 async function salvarNaNuvemSilencioso(){
+  const hoje=isoData(new Date());
+  if(isoData(G.data)>hoje)return; // nunca salvar data futura
   const dados=coletarDados();
   if(!dados.supervisor)return;
   try{
