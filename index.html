@@ -58,7 +58,7 @@ body{font-family:'IBM Plex Sans',sans-serif;background:var(--navy);color:var(--t
 .btnout{background:transparent;border:1px solid rgba(245,158,11,0.4);border-radius:6px;padding:6px 8px;color:var(--gold);font-size:11px;cursor:pointer;font-weight:600;}
 
 /* ── TOOLBAR ── */
-.toolbar{display:flex;flex-direction:column;gap:6px;padding:12px 14px;background:var(--surface2);border-bottom:1px solid var(--border);}
+.toolbar{display:flex;flex-direction:column;gap:6px;padding:10px 14px;background:var(--surface2);border-bottom:1px solid var(--border);position:sticky;top:52px;z-index:90;}
 .toolbar-row1{display:flex;align-items:center;justify-content:center;gap:6px;}
 .toolbar-row2{display:flex;align-items:center;gap:6px;flex-wrap:wrap;}
 @media(min-width:600px){.toolbar{flex-direction:row;align-items:center;}.toolbar-row1,.toolbar-row2{display:contents;}}
@@ -90,13 +90,13 @@ body{font-family:'IBM Plex Sans',sans-serif;background:var(--navy);color:var(--t
 .frow{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;}
 @media(max-width:500px){.frow{grid-template-columns:1fr;}}
 .flabel{font-size:12px;font-weight:700;letter-spacing:1px;color:#94a3b8;text-transform:uppercase;display:block;margin-bottom:6px;}
-.finput,.fselect,.ftextarea{width:100%;padding:13px 14px;background:var(--navy2);border:1px solid var(--border2);border-radius:8px;color:#ffffff;font-size:16px;font-family:'IBM Plex Sans',sans-serif;outline:none;transition:border-color .2s;-webkit-appearance:none;text-transform:uppercase;min-height:50px;}
+.finput,.fselect,.ftextarea{width:100%;padding:15px 14px;background:var(--navy2);border:1px solid var(--border2);border-radius:8px;color:#ffffff;font-size:16px;font-family:'IBM Plex Sans',sans-serif;outline:none;transition:border-color .2s;-webkit-appearance:none;text-transform:uppercase;min-height:54px;box-sizing:border-box;}
 .finput:focus,.fselect:focus,.ftextarea:focus{border-color:var(--verde3);}
 .fselect option{background:var(--navy2);}
 .ftextarea{resize:vertical;min-height:70px;line-height:1.5;}
 .finput-agentes{background:rgba(245,158,11,0.08);border-color:rgba(245,158,11,0.4);color:#ffffff;}
 .finput-agentes:focus{border-color:var(--gold);}
-.finput-ro{background:var(--surface3);color:var(--text3);cursor:not-allowed;}
+.finput-ro{background:var(--surface3);color:#ffffff;cursor:not-allowed;font-weight:700;font-size:18px;}
 
 /* ── ITENS DINÂMICOS ── */
 .item-row{display:flex;flex-direction:column;gap:6px;background:var(--surface3);border:1px solid var(--border);border-left:3px solid var(--verde3);border-radius:8px;padding:12px;margin-bottom:8px;position:relative;}
@@ -237,7 +237,9 @@ body{font-family:'IBM Plex Sans',sans-serif;background:var(--navy);color:var(--t
         <button class="bcarregar" onclick="carregarDiaAnterior()"><i class="fas fa-history"></i> Dia Anterior</button>
       </div>
       <button class="bpdf" onclick="gerarPDF()"><i class="fas fa-file-pdf"></i> PDF</button>
+      <button id="btnLimpar" class="bcarregar" onclick="limparTudo()" style="display:none;background:rgba(239,68,68,0.15);border-color:rgba(239,68,68,0.4);color:#f87171;"><i class="fas fa-trash"></i> Limpar</button>
       <button id="btnSenhas" class="bcarregar" onclick="abrirSenhas()" style="display:none;"><i class="fas fa-key"></i> Senhas</button>
+      <button class="bsalvar" id="btnSalvarFixo" onclick="salvarNaNuvem()" style="display:none;margin-left:auto;"><i class="fas fa-cloud-upload-alt"></i> Salvar</button>
     </div>
   </div>
 
@@ -461,6 +463,11 @@ function initApp(){
   // Mostrar botão senhas só para admin
   const btnS = document.getElementById('btnSenhas');
   if (btnS) btnS.style.display = G.role === 'admin' ? 'inline-flex' : 'none';
+  // Mostrar botão salvar fixo para admin/supervisor
+  const btnSF = document.getElementById('btnSalvarFixo');
+  if (btnSF) btnSF.style.display = ['admin','supervisor'].includes(G.role) ? 'inline-flex' : 'none';
+  const btnL = document.getElementById('btnLimpar');
+  if (btnL) btnL.style.display = ['admin','supervisor'].includes(G.role) ? 'inline-flex' : 'none';
   if(G.autoTimer)clearInterval(G.autoTimer);
   G.autoTimer=setInterval(()=>carregarRelatorio(false,true),60000);
   // Configurar autocomplete nos campos internos
@@ -509,9 +516,32 @@ function desbloquear(){
 // ══════════════════════════════════════════════
 function navData(d){G.data=new Date(G.data);G.data.setDate(G.data.getDate()+d);setDataInput();onDataChange();}
 function goHoje(){G.data=new Date();setDataInput();onDataChange();}
-function setDataInput(){document.getElementById('dataInput').value=isoData(G.data);}
-function onDataChange(){const v=document.getElementById('dataInput').value;if(v){G.data=localDate(v);configurarModo();carregarRelatorio();}}
-function onTurnoChange(){G.turno=document.getElementById('turnoInput').value;carregarRelatorio();}
+function setDataInput(){
+  const hoje=isoData(new Date());
+  const inp=document.getElementById('dataInput');
+  inp.max=hoje; // bloquear datas futuras
+  inp.value=isoData(G.data);
+}
+function onDataChange(){
+  const v=document.getElementById('dataInput').value;
+  if(!v)return;
+  const hoje=isoData(new Date());
+  if(v>hoje){
+    toast('Não é possível criar relatório para datas futuras.','err');
+    setDataInput(); // voltar para data atual
+    return;
+  }
+  G.data=localDate(v);
+  G.temAlteracaoLocal=false; // forçar recarregamento
+  G.desbloqueado=false;
+  configurarModo();
+  carregarRelatorio(true);
+}
+function onTurnoChange(){
+  G.turno=document.getElementById('turnoInput').value;
+  G.temAlteracaoLocal=false; // forçar recarregamento ao mudar turno
+  carregarRelatorio(true);
+}
 
 // ══════════════════════════════════════════════
 // API
@@ -593,6 +623,19 @@ async function salvarNaNuvemSilencioso(){
 // ══════════════════════════════════════════════
 // CARREGAR DIA ANTERIOR
 // ══════════════════════════════════════════════
+async function limparTudo(){
+  conf('Limpar Formulário','Todos os dados serão apagados e o relatório vazio será salvo na nuvem. Esta ação não pode ser desfeita. Confirma?',async()=>{
+    // Limpar campos
+    ['supervisor','central','ciops','sevim','sevimOperadores','cccf','coer','videomonitoramento','observacoes'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+    ['rotasContainer','apoioCtaforContainer','rendicaoVlContainer','afericaoContainer','apoioEtuforContainer','zonaAzulContainer','apoioAeroportoContainer','fiscalizacaoContainer','comandoContainer','missaoContainer','supervisaoContainer'].forEach(id=>{document.getElementById(id).innerHTML='';});
+    atualizarContagem();
+    G.temAlteracaoLocal=false;
+    // Salvar formulário vazio na nuvem imediatamente
+    await salvarNaNuvem();
+    toast('Formulário limpo e salvo! ✓','ok');
+  });
+}
+
 async function carregarDiaAnterior(){
   conf('Carregar Dia Anterior','Os dados do turno anterior serão carregados para edição. O que já foi digitado será substituído. Confirma?',async()=>{
     const dataAnterior=new Date(G.data);
@@ -1010,16 +1053,21 @@ async function gerarPDF(){
   async function loadImg(url){return new Promise((res,rej)=>{const img=new Image();img.crossOrigin='Anonymous';img.onload=()=>res(img);img.onerror=rej;img.src=url;});}
   async function addCab(){try{const img=await loadImg(urlCab);doc.addImage(img,'PNG',mL,2,lMax,hCab-2);doc.setFillColor(46,94,86);doc.rect(mL,hCab+1,lMax,9,'F');doc.setFont('helvetica','bold');doc.setFontSize(13);doc.setTextColor(255,255,255);const t='RELATÓRIO OPERACIONAL DE TURNO - AMC';doc.text(t,(210-doc.getTextWidth(t))/2,hCab+7);doc.setFont('helvetica','normal');doc.setFontSize(10);doc.setTextColor(0,0,0);}catch(e){}}
   async function addRod(){try{const img=await loadImg(urlRod);doc.addImage(img,'PNG',mL,hPag-hRod,lMax,hRod);doc.setFontSize(8);doc.setTextColor(100);doc.text(`Página ${pag}`,200-doc.getTextWidth(`Página ${pag}`),hPag-2);}catch(e){}}
-  async function checkPage(need=20){if(y+need>hPag-hRod-10){await addRod();doc.addPage();pag++;await addCab();y=hCab+15;}}
+  async function checkPage(need=30){if(y+need>hPag-hRod-10){await addRod();doc.addPage();pag++;await addCab();y=hCab+18;}}
   async function addTxt(txt,sz=10,x=mL,bold=false,cor=[0,0,0],sp=4){await checkPage();doc.setFont('helvetica',bold?'bold':'normal');doc.setFontSize(sz);doc.setTextColor(...cor);const ls=doc.splitTextToSize(txt,lMax);const h=ls.length*(sz*0.3528);if(y+h>hPag-hRod-10){await addRod();doc.addPage();pag++;await addCab();y=hCab+15;}doc.text(ls,x,y);y+=h+sp;}
   async function addTxtVerde(rot,val,sz=10){doc.setFont('helvetica','bold');doc.setFontSize(sz);doc.setTextColor(76,175,80);const lw=doc.getTextWidth(rot);doc.text(rot,mL,y);doc.setTextColor(0,0,0);const ls=doc.splitTextToSize(val.toUpperCase(),lMax-lw-1);doc.text(ls,mL+lw+1,y);y+=Math.max(ls.length*(sz*0.3528),sz*0.3528)+4;}
   async function addDiv(){await checkPage(4);doc.setLineWidth(0.5);doc.setDrawColor(46,94,86);doc.line(mL,y,mL+lMax,y);y+=7;}
-  async function addTabela(data,cols,startY){await checkPage(20);doc.autoTable({startY,head:[cols],body:data,theme:'grid',headStyles:{fillColor:[46,94,86],textColor:[255,255,255],fontStyle:'bold',fontSize:10,cellPadding:3},alternateRowStyles:{fillColor:[245,250,245]},styles:{fontSize:9.5,cellPadding:3,lineColor:[210,230,210],lineWidth:0.2,overflow:'linebreak'},columnStyles:{0:{cellWidth:8}},margin:{left:mL,right:10}});y=doc.lastAutoTable.finalY+5;}
-  async function addCard(campos){const pad=4,xT=mL+3+pad,lC=lMax;doc.setFont('helvetica','normal');doc.setFontSize(10);let alt=pad;const fs=campos.map(({rotulo,valor})=>{const lw=doc.getTextWidth(rotulo+' ');const ls=doc.splitTextToSize(valor||'',lC-lw-8-pad);const h=Math.max(ls.length*(10*0.3528),10*0.3528);alt+=h+3;return{rotulo,valor,ls,lw,h};});alt+=pad;await checkPage(alt+5);doc.setFillColor(245,247,245);doc.setDrawColor(46,94,86);doc.setLineWidth(0.1);doc.roundedRect(mL,y,lC,alt,2,2,'FD');doc.setFillColor(46,94,86);doc.rect(mL,y,3,alt,'F');let yT=y+pad+3;for(const{rotulo,valor,ls,lw,h}of fs){doc.setFont('helvetica','bold');doc.setTextColor(46,94,86);doc.text(rotulo,xT,yT);doc.setFont('helvetica','normal');doc.setTextColor(0,0,0);doc.text(ls,xT+lw,yT);yT+=h+3;}y+=alt+4;}
+  async function addTabela(data,cols,startY){
+    const estimH=10+(data.length*8)+10;
+    await checkPage(estimH);
+    startY=y;
+    doc.autoTable({startY,head:[cols],body:data,theme:'grid',headStyles:{fillColor:[46,94,86],textColor:[255,255,255],fontStyle:'bold',fontSize:10,cellPadding:3},alternateRowStyles:{fillColor:[245,250,245]},styles:{fontSize:9.5,cellPadding:3,lineColor:[210,230,210],lineWidth:0.2,overflow:'linebreak'},columnStyles:{0:{cellWidth:8}},margin:{left:mL,right:10}});y=doc.lastAutoTable.finalY+5;}
+  async function addCard(campos){const pad=5,xT=mL+3+pad,lC=lMax;doc.setFont('helvetica','normal');doc.setFontSize(10);let alt=pad;const fs=campos.map(({rotulo,valor})=>{const lw=doc.getTextWidth(rotulo+' ');const ls=doc.splitTextToSize(valor||'—',lC-lw-8-pad);const h=Math.max(ls.length*(10*0.3528),10*0.3528)+2;alt+=h+3;return{rotulo,valor:valor||'—',ls,lw,h};});alt+=pad+2;await checkPage(alt+10);doc.setFillColor(245,247,245);doc.setDrawColor(46,94,86);doc.setLineWidth(0.1);doc.roundedRect(mL,y,lC,alt,2,2,'FD');doc.setFillColor(46,94,86);doc.rect(mL,y,3,alt,'F');let yT=y+pad+3;for(const{rotulo,valor,ls,lw,h}of fs){doc.setFont('helvetica','bold');doc.setTextColor(46,94,86);doc.text(rotulo,xT,yT);doc.setFont('helvetica','normal');doc.setTextColor(0,0,0);doc.text(ls,xT+lw,yT);yT+=h+3;}y+=alt+4;}
   async function addBadge(n){await checkPage(40);y+=6;const s=6,xB=mL;doc.setFillColor(46,94,86);doc.roundedRect(xB,y-4.5,s,s,1,1,'F');doc.setFont('helvetica','bold');doc.setFontSize(8);doc.setTextColor(255,255,255);const ns=String(n),xN=xB+(s-doc.getTextWidth(ns))/2;doc.text(ns,xN,y-0.5);doc.setTextColor(0,0,0);}
   function addSubViaturas(){doc.setFont('helvetica','bolditalic');doc.setFontSize(9.5);doc.setTextColor(80,80,80);doc.text('Viaturas/Motos:',mL,y);doc.setLineWidth(0.2);doc.setDrawColor(180,200,180);doc.line(mL+doc.getTextWidth('Viaturas/Motos:')+2,y-1,mL+lMax,y-1);y+=4;}
   async function procTabela(arr,titulo,hasRota=false,cols=['#','Rota','Veículo','Agentes']){
     if(!arr||!arr.length)return;
+    await checkPage(40);
     await addTxt(titulo,12,mL,true,[76,175,80]);
     const td=arr.map((r,i)=>{
       if(titulo.includes('Zona Azul'))return[i+1,r.rota||'',`${r.veiculo||''} (${r.tipo||''})`,r.agentes||''];
@@ -1031,6 +1079,7 @@ async function gerarPDF(){
   }
   async function procComLocal(arr,titulo){
     if(!arr||!arr.length)return;
+    await checkPage(50);
     let cnt=1;await addTxt(titulo,12,mL,true,[46,94,86]);
     for(const item of arr){await addBadge(cnt);await addCard([{rotulo:'Local:',valor:item.local||''}]);if(item.viaturas?.length){await checkPage(25);addSubViaturas();const td=item.viaturas.map(v=>['',v.veiculo||'',v.agentes||'']);await addTabela(td,['','Veículo','Agentes'],y);}cnt++;}
     await addDiv();
@@ -1043,12 +1092,14 @@ async function gerarPDF(){
   }
   async function procComando(arr){
     if(!arr||!arr.length)return;
+    await checkPage(50);
     let cnt=1;await addTxt('15. Comando',12,mL,true,[46,94,86]);
     for(const item of arr){await addBadge(cnt);await addCard([{rotulo:'Local:',valor:item.local||''},{rotulo:'Coordenador:',valor:item.coordenador||''}]);if(item.viaturas?.length){await checkPage(25);addSubViaturas();const td=item.viaturas.map(v=>['',v.veiculo||'',v.agentes||'']);await addTabela(td,['','Veículo','Agentes'],y);}cnt++;}
     await addDiv();
   }
   async function procMissao(arr){
     if(!arr||!arr.length)return;
+    await checkPage(50);
     let cnt=1;await addTxt('16. Outras Missões',12,mL,true,[46,94,86]);
     for(const item of arr){await addBadge(cnt);await addCard([{rotulo:'Missão/Evento:',valor:item.evento||''},{rotulo:'Local:',valor:item.local||''},{rotulo:'Chefe da Missão:',valor:item.chefe||''}]);if(item.viaturas?.length){await checkPage(25);addSubViaturas();const td=item.viaturas.map(v=>['',v.veiculo||'',v.agentes||'',v.postoBase||'']);await addTabela(td,['','Veículo','Agentes','Posto Base'],y);}cnt++;}
     await addDiv();
