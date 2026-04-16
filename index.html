@@ -133,15 +133,15 @@ body{font-family:'IBM Plex Sans',sans-serif;background:var(--navy);color:var(--t
 /* ── AUTOCOMPLETE ── */
 .suggestions{position:absolute;z-index:9999;background:#0e1f36;border:1px solid #4CAF50;border-radius:0 0 8px 8px;max-height:200px;overflow-y:auto;box-shadow:0 8px 24px rgba(0,0,0,0.5);width:100%;left:0;top:100%;}
 .suggestions ul{list-style:none;padding:0;margin:0;}
-.suggestions li{padding:14px 16px;cursor:pointer;font-size:15px;color:#e2e8f0;border-bottom:1px solid rgba(255,255,255,0.05);user-select:none;-webkit-user-select:none;}
+.suggestions li{padding:13px 14px;cursor:pointer;font-size:15px;color:#e2e8f0;border-bottom:1px solid rgba(255,255,255,0.05);}
 .suggestions li:hover,.suggestions li.selected{background:#132840;color:#4CAF50;}
 .input-wrap{position:relative;width:100%;}
 .vt-wrap{position:relative;width:100%;}
 .vt-input{width:100%;padding:15px 14px;background:var(--navy2);border:1px solid var(--border2);border-radius:8px;color:#fff;font-size:16px;font-family:'IBM Plex Sans',sans-serif;outline:none;text-transform:uppercase;min-height:58px;box-sizing:border-box;}
 .vt-input:focus{border-color:var(--verde3);}
-.vt-drop{position:absolute;top:100%;left:0;width:100%;background:#0e1f36;border:1px solid #4CAF50;border-radius:0 0 8px 8px;max-height:250px;overflow-y:scroll;-webkit-overflow-scrolling:touch;z-index:9999;display:none;box-shadow:0 8px 24px rgba(0,0,0,0.5);}
+.vt-drop{position:absolute;top:100%;left:0;width:100%;background:#0e1f36;border:1px solid #4CAF50;border-radius:0 0 8px 8px;max-height:200px;overflow-y:auto;z-index:9999;display:none;box-shadow:0 8px 24px rgba(0,0,0,0.5);}
 .vt-drop.open{display:block;}
-.vt-drop div{padding:14px 16px;cursor:pointer;font-size:15px;color:#e2e8f0;border-bottom:1px solid rgba(255,255,255,0.05);user-select:none;-webkit-user-select:none;}
+.vt-drop div{padding:12px 14px;cursor:pointer;font-size:15px;color:#e2e8f0;border-bottom:1px solid rgba(255,255,255,0.05);}
 .vt-drop div:hover{background:#132840;color:#4CAF50;}
 .suggestions ul{list-style:none;padding:0;margin:0;}
 .suggestions li{padding:8px 12px;cursor:pointer;font-size:13px;color:var(--text2);}
@@ -274,7 +274,7 @@ body{font-family:'IBM Plex Sans',sans-serif;background:var(--navy);color:var(--t
       <div style="margin-bottom:10px;"><span class="flabel">02. CIOPS</span><div class="input-wrap"><input type="text" class="finput finput-agentes" id="ciops" placeholder="Nomes dos agentes"></div></div>
       <div style="margin-bottom:6px;"><span class="flabel">03. SEVIM — Agentes</span><div class="input-wrap"><input type="text" class="finput finput-agentes" id="sevim" placeholder="Nomes dos agentes"></div></div>
       <div style="margin-bottom:10px;"><span class="flabel">03. SEVIM — Operadores</span><div class="input-wrap"><input type="text" class="finput finput-agentes" id="sevimOperadores" placeholder="Nomes dos operadores"></div></div>
-      <div style="margin-bottom:10px;"><span class="flabel">04. CIVFOR</span><div class="input-wrap"><input type="text" class="finput finput-agentes" id="cccf" placeholder="Nomes dos agentes"></div></div>
+      <div style="margin-bottom:10px;"><span class="flabel">04. CCCF</span><div class="input-wrap"><input type="text" class="finput finput-agentes" id="cccf" placeholder="Nomes dos agentes"></div></div>
       <div style="margin-bottom:10px;"><span class="flabel">05. COER</span><div class="input-wrap"><input type="text" class="finput finput-agentes" id="coer" placeholder="Nomes dos agentes"></div></div>
       <div><span class="flabel">06. SEFE</span><div class="input-wrap"><input type="text" class="finput finput-agentes" id="videomonitoramento" placeholder="Nomes dos agentes do SEFE"></div></div>
     </div>
@@ -434,7 +434,7 @@ function criarVtInput(valorInicial){
   drop.addEventListener('click',function(e){
     if(e.target.tagName==='DIV'){inp.value=e.target.textContent;drop.classList.remove('open');agendarAutoSave();}
   });
-  drop.addEventListener('touchend',function(e){
+  drop.addEventListener('touchstart',function(e){
     if(e.target.tagName==='DIV'){e.preventDefault();inp.value=e.target.textContent;drop.classList.remove('open');agendarAutoSave();}
   },{passive:false});
   return wrap;
@@ -463,7 +463,6 @@ async function doLogin(){
   const err=document.getElementById('loginErr');
   const btn=document.getElementById('btnLogin');
   if(!role){err.textContent='Selecione um perfil.';err.style.display='block';return;}
-  if(!name&&role!=='central'){err.textContent='Informe seu nome de guerra.';err.style.display='block';return;}
   btn.textContent='Verificando...';btn.disabled=true;
   // Tentar buscar senhas da planilha
   try{const r=await api('getPasswords',{});if(r.data)G.pw={...DPW,...r.data};}catch(e){}
@@ -497,20 +496,17 @@ function initApp(){
   document.getElementById('hRole').className='urole '+RC[G.role];
   G.data=new Date();
   setDataInput();
-  // Turno automático pelo horário atual
-  const _h=new Date(),_hr=_h.getHours(),_mn=_h.getMinutes(),_tot=_hr*60+_mn;
-  if(_tot>=1&&_tot<=270) G.turno='MADRUGADA';       // 00:01 - 04:30
-  else if(_tot>=271&&_tot<=690) G.turno='MANHÃ';    // 04:31 - 11:30
-  else if(_tot>=691&&_tot<=1050) G.turno='TARDE';   // 11:31 - 17:30
-  else G.turno='NOITE';                              // 17:31 - 23:59
   document.getElementById('turnoInput').value=G.turno;
   configurarModo();
   carregarRelatorio();
   // Mostrar botão senhas só para admin
   const btnS = document.getElementById('btnSenhas');
   if (btnS) btnS.style.display = G.role === 'admin' ? 'inline-flex' : 'none';
-  // Supervisor: preenche campo só se relatório ainda não tem supervisor salvo
-  // (feito após carregarRelatorio, dentro de preencherFormulario)
+  // Preencher supervisor automaticamente
+  if(G.role==='supervisor'){
+    const supEl=document.getElementById('supervisor');
+    if(supEl&&!supEl.value)supEl.value=G.name;
+  }
   // Mostrar botão salvar fixo para admin/supervisor
 
   const btnL = document.getElementById('btnLimpar');
@@ -768,9 +764,9 @@ function coletarContainer(id,tipo){
       const rotaEl=el.querySelector('.seletor-rota');
       const rota=rotaEl?(rotaEl.tagName==='SELECT'?rotaEl.value:rotaEl.value):'';
       const outra=el.querySelector('.outra-rota')?el.querySelector('.outra-rota').value:'';
-      return{rota:rota==='OUTROS'&&outra?outra:rota,veiculo:el.querySelector('.vt-input')?.value||'',agentes:el.querySelector('.campo-agentes')?.value||''};
+      return{rota:rota==='OUTROS'&&outra?outra:rota,veiculo:el.querySelector('.seletor-veiculo')?.value||'',agentes:el.querySelector('.campo-agentes')?.value||''};
     }
-    return{veiculo:el.querySelector('.vt-input')?.value||'',agentes:el.querySelector('.finput-agentes')?.value||''};
+    return{veiculo:el.querySelector('select')?.value||'',agentes:el.querySelector('input[type=text]')?.value||''};
   });
 }
 function coletarViaturas(id){
@@ -779,35 +775,29 @@ function coletarViaturas(id){
 function coletarZonaAzul(){
   return Array.from(document.getElementById('zonaAzulContainer').children).map(el=>({
     rota:el.querySelector('input[type=text]')?.value||'',
-    veiculo:el.querySelector('.vt-input')?.value||'',
+    veiculo:el.querySelector('.seletor-veiculo')?.value||'',
     tipo:el.querySelector('.seletor-tipo')?.value||'',
     agentes:el.querySelector('input[placeholder="Digite os nomes dos agentes"]')?.value||''
   }));
 }
 function coletarAeroporto(){
   return Array.from(document.getElementById('apoioAeroportoContainer').children).map(el=>({
-    veiculo:el.querySelector('.vt-input')?.value||'',
+    veiculo:el.querySelector('.seletor-veiculo')?.value||'',
     plataforma:el.querySelector('.seletor-plataforma')?.value||'',
     agentes:el.querySelector('input[type=text]')?.value||''
   }));
 }
 function coletarComLocal(id){
   return Array.from(document.getElementById(id).children).map(el=>({
-    local:el.querySelector('input[placeholder="Digite o local"]')?.value||'',
-    viaturas:Array.from(el.querySelector('.viaturasContainer').children).map(v=>({
-      veiculo:v.querySelector('.vt-input')?.value||'',
-      agentes:v.querySelector('.finput-agentes')?.value||''
-    }))
+    local:el.querySelector('input:nth-child(1)')?.value||'',
+    viaturas:Array.from(el.querySelector('.viaturasContainer').children).map(v=>({veiculo:v.querySelector('select')?.value||'',agentes:v.querySelector('input[type=text]')?.value||''}))
   }));
 }
 function coletarComLocalChefe(id){
   return Array.from(document.getElementById(id).children).map(el=>({
-    local:el.querySelector('input[placeholder="Digite o local"]')?.value||'',
-    chefe:el.querySelector('input[placeholder="Digite o chefe da missão"]')?.value||'',
-    viaturas:Array.from(el.querySelector('.viaturasContainer').children).map(v=>({
-      veiculo:v.querySelector('.vt-input')?.value||'',
-      agentes:v.querySelector('.finput-agentes')?.value||''
-    }))
+    local:el.querySelector('input:nth-child(1)')?.value||'',
+    chefe:el.querySelector('input:nth-child(2)')?.value||'',
+    viaturas:Array.from(el.querySelector('.viaturasContainer').children).map(v=>({veiculo:v.querySelector('select')?.value||'',agentes:v.querySelector('input[type=text]')?.value||''}))
   }));
 }
 function coletarComando(){
@@ -833,24 +823,19 @@ function coletarMissao(){
 function preencherFormulario(d){
   const campos=['supervisor','central','ciops','sevim','sevimOperadores','cccf','coer','videomonitoramento','observacoes'];
   campos.forEach(id=>{const el=document.getElementById(id);if(el)el.value=d[id]||'';});
-  // Se supervisor e relatório não tem supervisor salvo, preenche com nome do login
-  if(G.role==='supervisor'){
-    const supEl=document.getElementById('supervisor');
-    if(supEl&&(!d.supervisor||d.supervisor.trim()===''))supEl.value=G.name;
-  }
   // Limpar e recriar containers
   const containers=['rotasContainer','apoioCtaforContainer','rendicaoVlContainer','afericaoContainer','apoioEtuforContainer','zonaAzulContainer','apoioAeroportoContainer','fiscalizacaoContainer','comandoContainer','missaoContainer','supervisaoContainer'];
   containers.forEach(id=>document.getElementById(id).innerHTML='');
-  (d.rotas||[]).forEach(r=>{adicionarRota();const el=document.getElementById('rotasContainer').lastElementChild;if(el.querySelector('.seletor-rota'))el.querySelector('.seletor-rota').value=r.rota||'';const vtI=el.querySelector('.vt-input');if(vtI)vtI.value=r.veiculo||'';el.querySelector('.campo-agentes').value=r.agentes||'';});
+  (d.rotas||[]).forEach(r=>{adicionarRota();const el=document.getElementById('rotasContainer').lastElementChild;el.querySelector('.seletor-rota').value=r.rota;el.querySelector('.seletor-veiculo').value=r.veiculo;el.querySelector('.campo-agentes').value=r.agentes||'';});
   (d.apoioCtafor||[]).forEach(r=>{addComLocal('apoioCtaforContainer');const el=document.getElementById('apoioCtaforContainer').lastElementChild;el.querySelector('input:nth-child(1)').value=r.local||'';(r.viaturas||[]).forEach(v=>{const div=criarViaturaSimples();div.querySelector('select').value=v.veiculo||'';div.querySelector('input[type=text]').value=v.agentes||'';el.querySelector('.viaturasContainer').appendChild(div);});});
   (d.rendicaoVl||[]).forEach(r=>{addComLocal('rendicaoVlContainer');const el=document.getElementById('rendicaoVlContainer').lastElementChild;el.querySelector('input:nth-child(1)').value=r.local||'';(r.viaturas||[]).forEach(v=>{const div=criarViaturaSimples();div.querySelector('select').value=v.veiculo||'';div.querySelector('input[type=text]').value=v.agentes||'';el.querySelector('.viaturasContainer').appendChild(div);});});
   (d.afericao||[]).forEach(r=>{addComLocalChefe('afericaoContainer');const el=document.getElementById('afericaoContainer').lastElementChild;el.querySelector('input:nth-child(1)').value=r.local||'';el.querySelector('input:nth-child(2)').value=r.chefe||'';(r.viaturas||[]).forEach(v=>{const div=criarViaturaSimples();div.querySelector('select').value=v.veiculo||'';div.querySelector('input[type=text]').value=v.agentes||'';el.querySelector('.viaturasContainer').appendChild(div);});});
   (d.apoioEtufor||[]).forEach(r=>{addViatura('apoioEtuforContainer');const el=document.getElementById('apoioEtuforContainer').lastElementChild;const vtInp=el.querySelector('.vt-input');if(vtInp)vtInp.value=r.veiculo||'';const agInp=el.querySelector('.finput-agentes');if(agInp)agInp.value=r.agentes||'';});
-  (d.zonaAzul||[]).forEach(r=>{addZonaAzul();const el=document.getElementById('zonaAzulContainer').lastElementChild;(()=>{const _r=el.querySelector("input[placeholder='Rota']");if(_r)_r.value=r.rota||'';console.log('rota set',r.rota);})();(()=>{const _v=el.querySelector('.vt-input');if(_v)_v.value=r.veiculo||'';})();el.querySelector('.seletor-tipo').value=r.tipo||'';el.querySelector('input[placeholder="Digite os nomes dos agentes"]').value=r.agentes||'';});
-  (d.apoioAeroporto||[]).forEach(r=>{addAeroporto();const el=document.getElementById('apoioAeroportoContainer').lastElementChild;(()=>{const _v=el.querySelector('.vt-input');if(_v)_v.value=r.veiculo||'';})();el.querySelector('.seletor-plataforma').value=r.plataforma||'';el.querySelector('input[type=text]').value=r.agentes||'';});
-  (d.fiscalizacao||[]).forEach(r=>{addFiscalizacao();const el=document.getElementById('fiscalizacaoContainer').lastElementChild;if(el.querySelector('.seletor-rota'))el.querySelector('.seletor-rota').value=r.rota||'';const vtI=el.querySelector('.vt-input');if(vtI)vtI.value=r.veiculo||'';el.querySelector('.campo-agentes').value=r.agentes||'';});
-  (d.comando||[]).forEach(r=>{addComando();const el=document.getElementById('comandoContainer').lastElementChild;const lInp=el.querySelector('input[placeholder="Digite o local"]');if(lInp)lInp.value=r.local||'';const cInp=el.querySelector('input[placeholder="Digite o coordenador responsável"]');if(cInp)cInp.value=r.coordenador||'';(r.viaturas||[]).forEach(v=>{const vtDiv=criarViaturaSimples();el.querySelector('.viaturasContainer').appendChild(vtDiv);const vtI=vtDiv.querySelector('.vt-input');if(vtI)vtI.value=v.veiculo||'';const agI=vtDiv.querySelector('.finput-agentes');if(agI)agI.value=v.agentes||'';});});});
-  (d.missao||[]).forEach(r=>{addMissao();const el=document.getElementById('missaoContainer').lastElementChild;const eInp=el.querySelector('input[placeholder="Digite missão ou evento"]');if(eInp)eInp.value=r.evento||'';const lInp=el.querySelector('input[placeholder="Digite o local"]');if(lInp)lInp.value=r.local||'';const cInp=el.querySelector('input[placeholder="Digite o chefe da missão"]');if(cInp)cInp.value=r.chefe||'';(r.viaturas||[]).forEach(v=>{const vtDiv=criarViaturaMissao();el.querySelector('.viaturasContainer').appendChild(vtDiv);const vtI=vtDiv.querySelector('.vt-input');if(vtI)vtI.value=v.veiculo||'';const agI=vtDiv.querySelector('.finput-agentes');if(agI)agI.value=v.agentes||'';const pbI=vtDiv.querySelector('input[placeholder="Digite o Posto Base"]');if(pbI)pbI.value=v.postoBase||'';});});});
+  (d.zonaAzul||[]).forEach(r=>{addZonaAzul();const el=document.getElementById('zonaAzulContainer').lastElementChild;el.querySelector('input[type=text]').value=r.rota||'';el.querySelector('.seletor-veiculo').value=r.veiculo||'';el.querySelector('.seletor-tipo').value=r.tipo||'';el.querySelector('input[placeholder="Digite os nomes dos agentes"]').value=r.agentes||'';});
+  (d.apoioAeroporto||[]).forEach(r=>{addAeroporto();const el=document.getElementById('apoioAeroportoContainer').lastElementChild;el.querySelector('.seletor-veiculo').value=r.veiculo||'';el.querySelector('.seletor-plataforma').value=r.plataforma||'';el.querySelector('input[type=text]').value=r.agentes||'';});
+  (d.fiscalizacao||[]).forEach(r=>{addFiscalizacao();const el=document.getElementById('fiscalizacaoContainer').lastElementChild;el.querySelector('.seletor-rota').value=r.rota;el.querySelector('.seletor-veiculo').value=r.veiculo;el.querySelector('.campo-agentes').value=r.agentes||'';});
+  (d.comando||[]).forEach(r=>{addComando();const el=document.getElementById('comandoContainer').lastElementChild;el.querySelector('input:nth-child(1)').value=r.local||'';el.querySelector('input:nth-child(2)').value=r.coordenador||'';(r.viaturas||[]).forEach(v=>{const div=criarViaturaSimples();div.querySelector('select').value=v.veiculo||'';div.querySelector('input[type=text]').value=v.agentes||'';el.querySelector('.viaturasContainer').appendChild(div);});});
+  (d.missao||[]).forEach(r=>{addMissao();const el=document.getElementById('missaoContainer').lastElementChild;el.querySelector('input:nth-child(1)').value=r.evento||'';el.querySelector('input:nth-child(2)').value=r.local||'';el.querySelector('input:nth-child(3)').value=r.chefe||'';(r.viaturas||[]).forEach(v=>{const div=criarViaturaMissao();div.querySelector('select').value=v.veiculo||'';div.querySelector("input[placeholder='Digite os nomes dos agentes']").value=v.agentes||'';div.querySelector("input[placeholder='Digite o Posto Base']").value=v.postoBase||'';el.querySelector('.viaturasContainer').appendChild(div);});});
   (d.supervisao||[]).forEach(r=>{addSupervisao();const el=document.getElementById('supervisaoContainer').lastElementChild;if(el.querySelector('.seletor-rota'))el.querySelector('.seletor-rota').value=r.rota||'';const vtInp=el.querySelector('.vt-input');if(vtInp)vtInp.value=r.veiculo||'';if(el.querySelector('.campo-agentes'))el.querySelector('.campo-agentes').value=r.agentes||'';});
   atualizarContagem();
   if(d.savedAt){const t=new Date(d.savedAt).toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});document.getElementById('saveInfo').textContent='💾 Salvo às '+t;}
@@ -858,8 +843,6 @@ function preencherFormulario(d){
 
 function limparFormulario(){
   ['supervisor','central','ciops','sevim','sevimOperadores','cccf','coer','videomonitoramento','observacoes','totalAgentes','internos','externos'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
-  // Se supervisor e relatório vazio, preenche nome dele
-  if(G.role==='supervisor'){const supEl=document.getElementById('supervisor');if(supEl)supEl.value=G.name;}
   ['rotasContainer','apoioCtaforContainer','rendicaoVlContainer','afericaoContainer','apoioEtuforContainer','zonaAzulContainer','apoioAeroportoContainer','fiscalizacaoContainer','comandoContainer','missaoContainer','supervisaoContainer'].forEach(id=>document.getElementById(id).innerHTML='');
   document.getElementById('saveInfo').textContent='';
   renderVisualizacao(null);
@@ -981,6 +964,9 @@ function addFiscalizacao(){
   agDiv.innerHTML=`<input type="text" class="campo-agentes finput finput-agentes" placeholder="Digite os nomes dos agentes" autocomplete="off">`;div.appendChild(agDiv);
   const btnR=document.createElement('button');btnR.className='btnrem';btnR.innerHTML='<i class="fas fa-trash"></i> Remover';
   btnR.addEventListener('click',()=>{div.remove();atualizarContagem();});div.appendChild(btnR);
+  const sRota=div.querySelector('.seletor-rota'),outra=div.querySelector('.outra-rota');
+  sRota.addEventListener('change',()=>{outra.style.display=sRota.value==='OUTROS'?'block':'none';});
+  addEventosAgentes(div.querySelector('.campo-agentes'));
   document.getElementById('fiscalizacaoContainer').appendChild(div);
   atualizarContagem();agendarAutoSave();
 }
@@ -991,37 +977,19 @@ function addComLocal(id){
 }
 function addComLocalChefe(id){
   const div=document.createElement('div');div.className='card-complexo';
-  div.innerHTML=`<input type="text" class="finput" placeholder="Digite o local" style="margin-bottom:6px;"><input type="text" class="finput" placeholder="Digite o chefe da missão" style="margin-bottom:6px;"><div class="viaturas-sub">Viaturas/Motos</div><div class="viaturasContainer"></div>`;
-  const btnAdd=document.createElement('button');btnAdd.className='btnadd';btnAdd.innerHTML='<i class="fas fa-plus"></i> Viatura/Moto';
-  btnAdd.addEventListener('click',()=>{div.querySelector('.viaturasContainer').appendChild(criarViaturaSimples());atualizarContagem();});
-  div.appendChild(btnAdd);
-  const btnRem=document.createElement('button');btnRem.className='btnrem';btnRem.style.marginTop='8px';btnRem.innerHTML='<i class="fas fa-trash"></i> Remover';
-  btnRem.addEventListener('click',()=>{div.remove();atualizarContagem();});
-  div.appendChild(btnRem);
+  div.innerHTML=`<input type="text" class="finput" placeholder="Digite o local" style="margin-bottom:6px;"><input type="text" class="finput" placeholder="Digite o chefe da missão" style="margin-bottom:6px;"><div class="viaturas-sub">Viaturas/Motos</div><div class="viaturasContainer"></div><button class="btnadd" onclick="this.previousElementSibling.appendChild(criarViaturaSimples());atualizarContagem()"><i class="fas fa-plus"></i> Viatura/Moto</button><button class="btnrem" style="margin-left:8px;margin-top:8px;" onclick="this.parentElement.remove();atualizarContagem()"><i class="fas fa-trash"></i> Remover</button>`;
   document.getElementById(id).appendChild(div);agendarAutoSave();
 }
 function addComando(){
   const div=document.createElement('div');div.className='card-complexo';
   div.style.borderLeftColor='var(--gold)';
-  div.innerHTML=`<input type="text" class="finput" placeholder="Digite o local" style="margin-bottom:6px;"><input type="text" class="finput" placeholder="Digite o coordenador responsável" style="margin-bottom:6px;"><div class="viaturas-sub">Viaturas/Motos</div><div class="viaturasContainer"></div>`;
-  const btnAdd=document.createElement('button');btnAdd.className='btnadd';btnAdd.innerHTML='<i class="fas fa-plus"></i> Viatura/Moto';
-  btnAdd.addEventListener('click',()=>{div.querySelector('.viaturasContainer').appendChild(criarViaturaSimples());atualizarContagem();});
-  div.appendChild(btnAdd);
-  const btnRem=document.createElement('button');btnRem.className='btnrem';btnRem.style.marginTop='8px';btnRem.innerHTML='<i class="fas fa-trash"></i> Remover';
-  btnRem.addEventListener('click',()=>{div.remove();atualizarContagem();});
-  div.appendChild(btnRem);
+  div.innerHTML=`<input type="text" class="finput" placeholder="Digite o local" style="margin-bottom:6px;"><input type="text" class="finput" placeholder="Digite o coordenador responsável" style="margin-bottom:6px;"><div class="viaturas-sub">Viaturas/Motos</div><div class="viaturasContainer"></div><button class="btnadd" onclick="this.previousElementSibling.appendChild(criarViaturaSimples());atualizarContagem()"><i class="fas fa-plus"></i> Viatura/Moto</button><button class="btnrem" style="margin-left:8px;margin-top:8px;" onclick="this.parentElement.remove();atualizarContagem()"><i class="fas fa-trash"></i> Remover</button>`;
   document.getElementById('comandoContainer').appendChild(div);agendarAutoSave();
 }
 function addMissao(){
   const div=document.createElement('div');div.className='card-complexo';
   div.style.borderLeftColor='var(--orange2)';
-  div.innerHTML=`<input type="text" class="finput" placeholder="Digite missão ou evento" style="margin-bottom:6px;"><input type="text" class="finput" placeholder="Digite o local" style="margin-bottom:6px;"><input type="text" class="finput" placeholder="Digite o chefe da missão" style="margin-bottom:6px;"><div class="viaturas-sub">Viaturas/Motos</div><div class="viaturasContainer"></div>`;
-  const btnAdd=document.createElement('button');btnAdd.className='btnadd';btnAdd.innerHTML='<i class="fas fa-plus"></i> Viatura/Moto';
-  btnAdd.addEventListener('click',()=>{div.querySelector('.viaturasContainer').appendChild(criarViaturaMissao());atualizarContagem();});
-  div.appendChild(btnAdd);
-  const btnRem=document.createElement('button');btnRem.className='btnrem';btnRem.style.marginTop='8px';btnRem.innerHTML='<i class="fas fa-trash"></i> Remover';
-  btnRem.addEventListener('click',()=>{div.remove();atualizarContagem();});
-  div.appendChild(btnRem);
+  div.innerHTML=`<input type="text" class="finput" placeholder="Digite missão ou evento" style="margin-bottom:6px;"><input type="text" class="finput" placeholder="Digite o local" style="margin-bottom:6px;"><input type="text" class="finput" placeholder="Digite o chefe da missão" style="margin-bottom:6px;"><div class="viaturas-sub">Viaturas/Motos</div><div class="viaturasContainer"></div><button class="btnadd" onclick="const d=criarViaturaMissao();this.previousElementSibling.appendChild(d);atualizarContagem()"><i class="fas fa-plus"></i> Viatura/Moto</button><button class="btnrem" style="margin-left:8px;margin-top:8px;" onclick="this.parentElement.remove();atualizarContagem()"><i class="fas fa-trash"></i> Remover</button>`;
   document.getElementById('missaoContainer').appendChild(div);agendarAutoSave();
 }
 function addSupervisao(){
@@ -1072,19 +1040,18 @@ function mostrarSugestoes(input){
   const lastComma=val.lastIndexOf(',');
   const cur=(lastComma>=0?val.substring(lastComma+1):val).trim();
   if(!cur||cur.length<1)return;
-  // startsWith: mostra nomes que começam com as letras digitadas, em ordem alfabética
-  const filtrados=agentes.filter(a=>a.toUpperCase().startsWith(cur.toUpperCase())).slice(0,20);
+  const filtrados=agentes.filter(a=>a.toUpperCase().includes(cur.toUpperCase())).slice(0,15);
   if(!filtrados.length)return;
   const sug=document.createElement('div');sug.className='suggestions';
   sug.innerHTML='<ul>'+filtrados.map(a=>`<li>${a}</li>`).join('')+'</ul>';
+  // Inserir dentro do pai (input-wrap) para position:absolute funcionar
   const wrap=input.parentElement;
   wrap.style.position='relative';
   wrap.appendChild(sug);
   input._sugEl=sug;
-  // mousedown para desktop, touchend para celular (não seleciona ao rolar)
   sug.querySelectorAll('li').forEach(li=>{
     li.addEventListener('mousedown',e=>{e.preventDefault();selecionarSugestao(input,li.textContent.trim());});
-    li.addEventListener('touchend',e=>{e.preventDefault();selecionarSugestao(input,li.textContent.trim());},{passive:false});
+    li.addEventListener('touchstart',e=>{e.preventDefault();selecionarSugestao(input,li.textContent.trim());},{passive:false});
   });
 }
 
@@ -1186,7 +1153,7 @@ function renderVisualizacao(d){
     ${sec('01. Central',campo('Agentes',d.central)||'<span class="view-empty">Nenhum dado informado</span>')}
     ${sec('02. CIOPS',campo('Agentes',d.ciops)||'<span class="view-empty">Nenhum dado informado</span>')}
     ${sec('03. SEVIM',campo('Agentes',d.sevim)+(d.sevimOperadores?campo('Operadores',d.sevimOperadores):'')||'<span class="view-empty">Nenhum dado informado</span>')}
-    ${sec('04. CIVFOR',campo('Agentes',d.cccf)||'<span class="view-empty">Nenhum dado informado</span>')}
+    ${sec('04. CCCF',campo('Agentes',d.cccf)||'<span class="view-empty">Nenhum dado informado</span>')}
     ${sec('05. COER',campo('Agentes',d.coer)||'<span class="view-empty">Nenhum dado informado</span>')}
     ${sec('06. SEFE',campo('Agentes',d.videomonitoramento)||'<span class="view-empty">Nenhum dado informado</span>')}
     ${sec('07. Rotas',tabela(d.rotas,['#','Rota','Veículo','Agentes']))}
@@ -1279,7 +1246,7 @@ async function gerarPDF(){
   await addTxt(`Supervisor: ${(dados.supervisor||'').toUpperCase()}`,10,mL,false,[0,0,0],2);
   await addTxt(`Total: ${dados.totalAgentes||0} (Internos: ${dados.internos||0}, Externos: ${dados.externos||0})`,10,mL,false,[0,0,0],6);
   // Seções 01-06
-  const secoes=[{id:'central',label:'01. CENTRAL:'},{id:'ciops',label:'02. CIOPS:'},{id:'sevim',label:'03. SEVIM:'},{id:'cccf',label:'04. CIVFOR:'},{id:'coer',label:'05. COER:'},{id:'videomonitoramento',label:'06. SEFE:'}];
+  const secoes=[{id:'central',label:'01. CENTRAL:'},{id:'ciops',label:'02. CIOPS:'},{id:'sevim',label:'03. SEVIM:'},{id:'cccf',label:'04. CCCF:'},{id:'coer',label:'05. COER:'},{id:'videomonitoramento',label:'06. SEFE:'}];
   for(const s of secoes){
     if(dados[s.id]?.trim()){
       await addTxtVerde(s.label,dados[s.id],11);
