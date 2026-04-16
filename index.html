@@ -435,8 +435,14 @@ function criarVtInput(valorInicial){
   drop.addEventListener('click',function(e){
     if(e.target.tagName==='DIV'){inp.value=e.target.textContent;drop.classList.remove('open');agendarAutoSave();}
   });
+  let _vtTouchStartY=0;
+  drop.addEventListener('touchstart',function(e){_vtTouchStartY=e.touches[0].clientY;},{passive:true});
   drop.addEventListener('touchend',function(e){
-    if(e.target.tagName==='DIV'){e.preventDefault();inp.value=e.target.textContent;drop.classList.remove('open');agendarAutoSave();}
+    if(e.target.tagName==='DIV'){
+      const dy=Math.abs(e.changedTouches[0].clientY-_vtTouchStartY);
+      if(dy>8)return; // estava rolando, ignorar
+      e.preventDefault();inp.value=e.target.textContent;drop.classList.remove('open');agendarAutoSave();
+    }
   },{passive:false});
   return wrap;
 }
@@ -847,12 +853,12 @@ function preencherFormulario(d){
     const containers=['rotasContainer','apoioCtaforContainer','rendicaoVlContainer','afericaoContainer','apoioEtuforContainer','zonaAzulContainer','apoioAeroportoContainer','fiscalizacaoContainer','comandoContainer','missaoContainer','supervisaoContainer'];
     containers.forEach(id=>document.getElementById(id).innerHTML='');
     (d.rotas||[]).forEach(r=>{adicionarRota();const el=document.getElementById('rotasContainer').lastElementChild;if(el.querySelector('.seletor-rota'))el.querySelector('.seletor-rota').value=r.rota||'';const vtI=el.querySelector('.vt-input');if(vtI)vtI.value=r.veiculo||'';el.querySelector('.campo-agentes').value=r.agentes||'';});
-    (d.apoioCtafor||[]).forEach(r=>{addComLocal('apoioCtaforContainer');const el=document.getElementById('apoioCtaforContainer').lastElementChild;el.querySelector('input:nth-child(1)').value=r.local||'';(r.viaturas||[]).forEach(v=>{const div=criarViaturaSimples();div.querySelector('select').value=v.veiculo||'';div.querySelector('input[type=text]').value=v.agentes||'';el.querySelector('.viaturasContainer').appendChild(div);});});
-    (d.rendicaoVl||[]).forEach(r=>{addComLocal('rendicaoVlContainer');const el=document.getElementById('rendicaoVlContainer').lastElementChild;el.querySelector('input:nth-child(1)').value=r.local||'';(r.viaturas||[]).forEach(v=>{const div=criarViaturaSimples();div.querySelector('select').value=v.veiculo||'';div.querySelector('input[type=text]').value=v.agentes||'';el.querySelector('.viaturasContainer').appendChild(div);});});
-    (d.afericao||[]).forEach(r=>{addComLocalChefe('afericaoContainer');const el=document.getElementById('afericaoContainer').lastElementChild;el.querySelector('input:nth-child(1)').value=r.local||'';el.querySelector('input:nth-child(2)').value=r.chefe||'';(r.viaturas||[]).forEach(v=>{const div=criarViaturaSimples();div.querySelector('select').value=v.veiculo||'';div.querySelector('input[type=text]').value=v.agentes||'';el.querySelector('.viaturasContainer').appendChild(div);});});
+    (d.apoioCtafor||[]).forEach(r=>{addComLocal('apoioCtaforContainer');const el=document.getElementById('apoioCtaforContainer').lastElementChild;el.querySelector('input[placeholder="Digite o local"]').value=r.local||'';(r.viaturas||[]).forEach(v=>{const div=criarViaturaSimples();const vtI=div.querySelector('.vt-input');if(vtI)vtI.value=v.veiculo||'';const agI=div.querySelector('.finput-agentes');if(agI)agI.value=v.agentes||'';el.querySelector('.viaturasContainer').appendChild(div);});});
+    (d.rendicaoVl||[]).forEach(r=>{addComLocal('rendicaoVlContainer');const el=document.getElementById('rendicaoVlContainer').lastElementChild;el.querySelector('input[placeholder="Digite o local"]').value=r.local||'';(r.viaturas||[]).forEach(v=>{const div=criarViaturaSimples();const vtI=div.querySelector('.vt-input');if(vtI)vtI.value=v.veiculo||'';const agI=div.querySelector('.finput-agentes');if(agI)agI.value=v.agentes||'';el.querySelector('.viaturasContainer').appendChild(div);});});
+    (d.afericao||[]).forEach(r=>{addComLocalChefe('afericaoContainer');const el=document.getElementById('afericaoContainer').lastElementChild;el.querySelector('input[placeholder="Digite o local"]').value=r.local||'';el.querySelector('input[placeholder="Digite o chefe da missão"]').value=r.chefe||'';(r.viaturas||[]).forEach(v=>{const div=criarViaturaSimples();const vtI=div.querySelector('.vt-input');if(vtI)vtI.value=v.veiculo||'';const agI=div.querySelector('.finput-agentes');if(agI)agI.value=v.agentes||'';el.querySelector('.viaturasContainer').appendChild(div);});});
     (d.apoioEtufor||[]).forEach(r=>{addViatura('apoioEtuforContainer');const el=document.getElementById('apoioEtuforContainer').lastElementChild;const vtInp=el.querySelector('.vt-input');if(vtInp)vtInp.value=r.veiculo||'';const agInp=el.querySelector('.finput-agentes');if(agInp)agInp.value=r.agentes||'';});
-    (d.zonaAzul||[]).forEach(r=>{addZonaAzul();const el=document.getElementById('zonaAzulContainer').lastElementChild;(()=>{const _r=el.querySelector("input[placeholder='Rota']");if(_r)_r.value=r.rota||'';})();(()=>{const _v=el.querySelector('.vt-input');if(_v)_v.value=r.veiculo||'';})();el.querySelector('.seletor-tipo').value=r.tipo||'';el.querySelector('input[placeholder="Digite os nomes dos agentes"]').value=r.agentes||'';});
-    (d.apoioAeroporto||[]).forEach(r=>{addAeroporto();const el=document.getElementById('apoioAeroportoContainer').lastElementChild;(()=>{const _v=el.querySelector('.vt-input');if(_v)_v.value=r.veiculo||'';})();el.querySelector('.seletor-plataforma').value=r.plataforma||'';el.querySelector('input[type=text]').value=r.agentes||'';});
+    (d.zonaAzul||[]).forEach(r=>{addZonaAzul();const el=document.getElementById('zonaAzulContainer').lastElementChild;const _r=el.querySelector("input[placeholder='Rota']");if(_r)_r.value=r.rota||'';const _v=el.querySelector('.vt-input');if(_v)_v.value=r.veiculo||'';const _t=el.querySelector('.seletor-tipo');if(_t)_t.value=r.tipo||'';const _a=el.querySelector('input[placeholder="Digite os nomes dos agentes"]');if(_a)_a.value=r.agentes||'';});
+    (d.apoioAeroporto||[]).forEach(r=>{addAeroporto();const el=document.getElementById('apoioAeroportoContainer').lastElementChild;const _v=el.querySelector('.vt-input');if(_v)_v.value=r.veiculo||'';const _p=el.querySelector('.seletor-plataforma');if(_p)_p.value=r.plataforma||'';const _a=el.querySelector('input[placeholder="Digite os nomes dos agentes"]');if(_a)_a.value=r.agentes||'';});
     (d.fiscalizacao||[]).forEach(r=>{addFiscalizacao();const el=document.getElementById('fiscalizacaoContainer').lastElementChild;if(el.querySelector('.seletor-rota'))el.querySelector('.seletor-rota').value=r.rota||'';const vtI=el.querySelector('.vt-input');if(vtI)vtI.value=r.veiculo||'';el.querySelector('.campo-agentes').value=r.agentes||'';});
     (d.comando||[]).forEach(r=>{addComando();const el=document.getElementById('comandoContainer').lastElementChild;const lInp=el.querySelector('input[placeholder="Digite o local"]');if(lInp)lInp.value=r.local||'';const cInp=el.querySelector('input[placeholder="Digite o coordenador responsável"]');if(cInp)cInp.value=r.coordenador||'';(r.viaturas||[]).forEach(v=>{const vtDiv=criarViaturaSimples();el.querySelector('.viaturasContainer').appendChild(vtDiv);const vtI=vtDiv.querySelector('.vt-input');if(vtI)vtI.value=v.veiculo||'';const agI=vtDiv.querySelector('.finput-agentes');if(agI)agI.value=v.agentes||'';});});
     (d.missao||[]).forEach(r=>{addMissao();const el=document.getElementById('missaoContainer').lastElementChild;const eInp=el.querySelector('input[placeholder="Digite missão ou evento"]');if(eInp)eInp.value=r.evento||'';const lInp=el.querySelector('input[placeholder="Digite o local"]');if(lInp)lInp.value=r.local||'';const cInp=el.querySelector('input[placeholder="Digite o chefe da missão"]');if(cInp)cInp.value=r.chefe||'';(r.viaturas||[]).forEach(v=>{const vtDiv=criarViaturaMissao();el.querySelector('.viaturasContainer').appendChild(vtDiv);const vtI=vtDiv.querySelector('.vt-input');if(vtI)vtI.value=v.veiculo||'';const agI=vtDiv.querySelector('.finput-agentes');if(agI)agI.value=v.agentes||'';const pbI=vtDiv.querySelector('input[placeholder="Digite o Posto Base"]');if(pbI)pbI.value=v.postoBase||'';});});
@@ -989,6 +995,7 @@ function addFiscalizacao(){
   agDiv.innerHTML=`<input type="text" class="campo-agentes finput finput-agentes" placeholder="Digite os nomes dos agentes" autocomplete="off">`;div.appendChild(agDiv);
   const btnR=document.createElement('button');btnR.className='btnrem';btnR.innerHTML='<i class="fas fa-trash"></i> Remover';
   btnR.addEventListener('click',()=>{div.remove();atualizarContagem();});div.appendChild(btnR);
+  addEventosAgentes(agDiv.querySelector('input')); // autocomplete agentes
   document.getElementById('fiscalizacaoContainer').appendChild(div);
   atualizarContagem();agendarAutoSave();
 }
@@ -1089,10 +1096,16 @@ function mostrarSugestoes(input){
   wrap.style.position='relative';
   wrap.appendChild(sug);
   input._sugEl=sug;
-  // mousedown para desktop, touchend para celular (não seleciona ao rolar)
+  // mousedown para desktop, touchstart/touchend para celular (cancela se rolou)
   sug.querySelectorAll('li').forEach(li=>{
     li.addEventListener('mousedown',e=>{e.preventDefault();selecionarSugestao(input,li.textContent.trim());});
-    li.addEventListener('touchend',e=>{e.preventDefault();selecionarSugestao(input,li.textContent.trim());},{passive:false});
+    let _touchStartY=0;
+    li.addEventListener('touchstart',e=>{_touchStartY=e.touches[0].clientY;},{passive:true});
+    li.addEventListener('touchend',e=>{
+      const dy=Math.abs(e.changedTouches[0].clientY-_touchStartY);
+      if(dy>8)return; // estava rolando, ignorar
+      e.preventDefault();selecionarSugestao(input,li.textContent.trim());
+    },{passive:false});
   });
 }
 
