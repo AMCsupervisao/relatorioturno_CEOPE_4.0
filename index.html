@@ -402,6 +402,7 @@ let G={
   autoTimer:null,
   confCb:null,
   savingTimer:null,
+  preenchendo:false,
 };
 
 let rotas=JSON.parse(localStorage.getItem(LS.rotas))||["13 DE MAIO","AGUANAMBI","ALDEOTA","ALDEOTA/DIONÍSIO TORRES","BEIRA MAR","BENFICA","BENFICA/FÁTIMA","BEZERRA DE MENEZES","CASTELÃO","CENTRO","CIDADE DOS FUNCIONÁRIOS","CIDADE DOS FUNCIONÁRIOS/JARDIM DAS OLIVEIRAS","DIONÍSIO TORRES","JOSÉ WALTER","MARAPONGA","MARAPONGA/MONDUBIM","MESSEJANA","MESSEJANA/LAGOA REDONDA","MONTESE","MONTESE/VILA UNIÃO","NVA","PAPICU","PAPICU/MEIRELES","PARANGABA","PARANGABA/VILA PERI","PRAIA DE IRACEMA","QRV DA CENTRAL","RODOLFO TEÓFILO","SÃO GERARDO/MONTE CASTELO","ZONA AZUL ALDEOTA","ZONA AZUL BEIRA MAR","ZONA AZUL CENTRO","ZONA AZUL PERIFERIA","OUTROS"];
@@ -639,6 +640,7 @@ async function carregarRelatorio(manual,silent){
 }
 
 async function salvarNaNuvem(){
+  if(G.savingTimer){clearTimeout(G.savingTimer);G.savingTimer=null;} // cancelar auto-save pendente
   const hoje=isoData(new Date());
   if(isoData(G.data)>hoje){
     toast('Não é possível salvar relatório para datas futuras.','err');
@@ -667,6 +669,7 @@ async function salvarNaNuvem(){
 
 // Auto-save silencioso a cada alteração
 function agendarAutoSave(){
+  if(G.preenchendo)return; // nunca disparar durante preenchimento do formulário
   G.temAlteracaoLocal=true; // marcar que há dados não salvos
   if(G.savingTimer)clearTimeout(G.savingTimer);
   G.savingTimer=setTimeout(()=>{
@@ -831,29 +834,34 @@ function coletarMissao(){
 }
 
 function preencherFormulario(d){
-  const campos=['supervisor','central','ciops','sevim','sevimOperadores','cccf','coer','videomonitoramento','observacoes'];
-  campos.forEach(id=>{const el=document.getElementById(id);if(el)el.value=d[id]||'';});
-  // Se supervisor e relatório não tem supervisor salvo, preenche com nome do login
-  if(G.role==='supervisor'){
-    const supEl=document.getElementById('supervisor');
-    if(supEl&&(!d.supervisor||d.supervisor.trim()===''))supEl.value=G.name;
+  G.preenchendo=true; // bloquear auto-save durante o preenchimento
+  try{
+    const campos=['supervisor','central','ciops','sevim','sevimOperadores','cccf','coer','videomonitoramento','observacoes'];
+    campos.forEach(id=>{const el=document.getElementById(id);if(el)el.value=d[id]||'';});
+    // Se supervisor e relatório não tem supervisor salvo, preenche com nome do login
+    if(G.role==='supervisor'){
+      const supEl=document.getElementById('supervisor');
+      if(supEl&&(!d.supervisor||d.supervisor.trim()===''))supEl.value=G.name;
+    }
+    // Limpar e recriar containers
+    const containers=['rotasContainer','apoioCtaforContainer','rendicaoVlContainer','afericaoContainer','apoioEtuforContainer','zonaAzulContainer','apoioAeroportoContainer','fiscalizacaoContainer','comandoContainer','missaoContainer','supervisaoContainer'];
+    containers.forEach(id=>document.getElementById(id).innerHTML='');
+    (d.rotas||[]).forEach(r=>{adicionarRota();const el=document.getElementById('rotasContainer').lastElementChild;if(el.querySelector('.seletor-rota'))el.querySelector('.seletor-rota').value=r.rota||'';const vtI=el.querySelector('.vt-input');if(vtI)vtI.value=r.veiculo||'';el.querySelector('.campo-agentes').value=r.agentes||'';});
+    (d.apoioCtafor||[]).forEach(r=>{addComLocal('apoioCtaforContainer');const el=document.getElementById('apoioCtaforContainer').lastElementChild;el.querySelector('input:nth-child(1)').value=r.local||'';(r.viaturas||[]).forEach(v=>{const div=criarViaturaSimples();div.querySelector('select').value=v.veiculo||'';div.querySelector('input[type=text]').value=v.agentes||'';el.querySelector('.viaturasContainer').appendChild(div);});});
+    (d.rendicaoVl||[]).forEach(r=>{addComLocal('rendicaoVlContainer');const el=document.getElementById('rendicaoVlContainer').lastElementChild;el.querySelector('input:nth-child(1)').value=r.local||'';(r.viaturas||[]).forEach(v=>{const div=criarViaturaSimples();div.querySelector('select').value=v.veiculo||'';div.querySelector('input[type=text]').value=v.agentes||'';el.querySelector('.viaturasContainer').appendChild(div);});});
+    (d.afericao||[]).forEach(r=>{addComLocalChefe('afericaoContainer');const el=document.getElementById('afericaoContainer').lastElementChild;el.querySelector('input:nth-child(1)').value=r.local||'';el.querySelector('input:nth-child(2)').value=r.chefe||'';(r.viaturas||[]).forEach(v=>{const div=criarViaturaSimples();div.querySelector('select').value=v.veiculo||'';div.querySelector('input[type=text]').value=v.agentes||'';el.querySelector('.viaturasContainer').appendChild(div);});});
+    (d.apoioEtufor||[]).forEach(r=>{addViatura('apoioEtuforContainer');const el=document.getElementById('apoioEtuforContainer').lastElementChild;const vtInp=el.querySelector('.vt-input');if(vtInp)vtInp.value=r.veiculo||'';const agInp=el.querySelector('.finput-agentes');if(agInp)agInp.value=r.agentes||'';});
+    (d.zonaAzul||[]).forEach(r=>{addZonaAzul();const el=document.getElementById('zonaAzulContainer').lastElementChild;(()=>{const _r=el.querySelector("input[placeholder='Rota']");if(_r)_r.value=r.rota||'';})();(()=>{const _v=el.querySelector('.vt-input');if(_v)_v.value=r.veiculo||'';})();el.querySelector('.seletor-tipo').value=r.tipo||'';el.querySelector('input[placeholder="Digite os nomes dos agentes"]').value=r.agentes||'';});
+    (d.apoioAeroporto||[]).forEach(r=>{addAeroporto();const el=document.getElementById('apoioAeroportoContainer').lastElementChild;(()=>{const _v=el.querySelector('.vt-input');if(_v)_v.value=r.veiculo||'';})();el.querySelector('.seletor-plataforma').value=r.plataforma||'';el.querySelector('input[type=text]').value=r.agentes||'';});
+    (d.fiscalizacao||[]).forEach(r=>{addFiscalizacao();const el=document.getElementById('fiscalizacaoContainer').lastElementChild;if(el.querySelector('.seletor-rota'))el.querySelector('.seletor-rota').value=r.rota||'';const vtI=el.querySelector('.vt-input');if(vtI)vtI.value=r.veiculo||'';el.querySelector('.campo-agentes').value=r.agentes||'';});
+    (d.comando||[]).forEach(r=>{addComando();const el=document.getElementById('comandoContainer').lastElementChild;const lInp=el.querySelector('input[placeholder="Digite o local"]');if(lInp)lInp.value=r.local||'';const cInp=el.querySelector('input[placeholder="Digite o coordenador responsável"]');if(cInp)cInp.value=r.coordenador||'';(r.viaturas||[]).forEach(v=>{const vtDiv=criarViaturaSimples();el.querySelector('.viaturasContainer').appendChild(vtDiv);const vtI=vtDiv.querySelector('.vt-input');if(vtI)vtI.value=v.veiculo||'';const agI=vtDiv.querySelector('.finput-agentes');if(agI)agI.value=v.agentes||'';});});
+    (d.missao||[]).forEach(r=>{addMissao();const el=document.getElementById('missaoContainer').lastElementChild;const eInp=el.querySelector('input[placeholder="Digite missão ou evento"]');if(eInp)eInp.value=r.evento||'';const lInp=el.querySelector('input[placeholder="Digite o local"]');if(lInp)lInp.value=r.local||'';const cInp=el.querySelector('input[placeholder="Digite o chefe da missão"]');if(cInp)cInp.value=r.chefe||'';(r.viaturas||[]).forEach(v=>{const vtDiv=criarViaturaMissao();el.querySelector('.viaturasContainer').appendChild(vtDiv);const vtI=vtDiv.querySelector('.vt-input');if(vtI)vtI.value=v.veiculo||'';const agI=vtDiv.querySelector('.finput-agentes');if(agI)agI.value=v.agentes||'';const pbI=vtDiv.querySelector('input[placeholder="Digite o Posto Base"]');if(pbI)pbI.value=v.postoBase||'';});});
+    (d.supervisao||[]).forEach(r=>{addSupervisao();const el=document.getElementById('supervisaoContainer').lastElementChild;if(el.querySelector('.seletor-rota'))el.querySelector('.seletor-rota').value=r.rota||'';const vtInp=el.querySelector('.vt-input');if(vtInp)vtInp.value=r.veiculo||'';if(el.querySelector('.campo-agentes'))el.querySelector('.campo-agentes').value=r.agentes||'';});
+    atualizarContagem();
+    if(d.savedAt){const t=new Date(d.savedAt).toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});document.getElementById('saveInfo').textContent='💾 Salvo às '+t;}
+  }finally{
+    G.preenchendo=false; // liberar auto-save após preenchimento completo
   }
-  // Limpar e recriar containers
-  const containers=['rotasContainer','apoioCtaforContainer','rendicaoVlContainer','afericaoContainer','apoioEtuforContainer','zonaAzulContainer','apoioAeroportoContainer','fiscalizacaoContainer','comandoContainer','missaoContainer','supervisaoContainer'];
-  containers.forEach(id=>document.getElementById(id).innerHTML='');
-  (d.rotas||[]).forEach(r=>{adicionarRota();const el=document.getElementById('rotasContainer').lastElementChild;if(el.querySelector('.seletor-rota'))el.querySelector('.seletor-rota').value=r.rota||'';const vtI=el.querySelector('.vt-input');if(vtI)vtI.value=r.veiculo||'';el.querySelector('.campo-agentes').value=r.agentes||'';});
-  (d.apoioCtafor||[]).forEach(r=>{addComLocal('apoioCtaforContainer');const el=document.getElementById('apoioCtaforContainer').lastElementChild;el.querySelector('input:nth-child(1)').value=r.local||'';(r.viaturas||[]).forEach(v=>{const div=criarViaturaSimples();div.querySelector('select').value=v.veiculo||'';div.querySelector('input[type=text]').value=v.agentes||'';el.querySelector('.viaturasContainer').appendChild(div);});});
-  (d.rendicaoVl||[]).forEach(r=>{addComLocal('rendicaoVlContainer');const el=document.getElementById('rendicaoVlContainer').lastElementChild;el.querySelector('input:nth-child(1)').value=r.local||'';(r.viaturas||[]).forEach(v=>{const div=criarViaturaSimples();div.querySelector('select').value=v.veiculo||'';div.querySelector('input[type=text]').value=v.agentes||'';el.querySelector('.viaturasContainer').appendChild(div);});});
-  (d.afericao||[]).forEach(r=>{addComLocalChefe('afericaoContainer');const el=document.getElementById('afericaoContainer').lastElementChild;el.querySelector('input:nth-child(1)').value=r.local||'';el.querySelector('input:nth-child(2)').value=r.chefe||'';(r.viaturas||[]).forEach(v=>{const div=criarViaturaSimples();div.querySelector('select').value=v.veiculo||'';div.querySelector('input[type=text]').value=v.agentes||'';el.querySelector('.viaturasContainer').appendChild(div);});});
-  (d.apoioEtufor||[]).forEach(r=>{addViatura('apoioEtuforContainer');const el=document.getElementById('apoioEtuforContainer').lastElementChild;const vtInp=el.querySelector('.vt-input');if(vtInp)vtInp.value=r.veiculo||'';const agInp=el.querySelector('.finput-agentes');if(agInp)agInp.value=r.agentes||'';});
-  (d.zonaAzul||[]).forEach(r=>{addZonaAzul();const el=document.getElementById('zonaAzulContainer').lastElementChild;(()=>{const _r=el.querySelector("input[placeholder='Rota']");if(_r)_r.value=r.rota||'';console.log('rota set',r.rota);})();(()=>{const _v=el.querySelector('.vt-input');if(_v)_v.value=r.veiculo||'';})();el.querySelector('.seletor-tipo').value=r.tipo||'';el.querySelector('input[placeholder="Digite os nomes dos agentes"]').value=r.agentes||'';});
-  (d.apoioAeroporto||[]).forEach(r=>{addAeroporto();const el=document.getElementById('apoioAeroportoContainer').lastElementChild;(()=>{const _v=el.querySelector('.vt-input');if(_v)_v.value=r.veiculo||'';})();el.querySelector('.seletor-plataforma').value=r.plataforma||'';el.querySelector('input[type=text]').value=r.agentes||'';});
-  (d.fiscalizacao||[]).forEach(r=>{addFiscalizacao();const el=document.getElementById('fiscalizacaoContainer').lastElementChild;if(el.querySelector('.seletor-rota'))el.querySelector('.seletor-rota').value=r.rota||'';const vtI=el.querySelector('.vt-input');if(vtI)vtI.value=r.veiculo||'';el.querySelector('.campo-agentes').value=r.agentes||'';});
-  (d.comando||[]).forEach(r=>{addComando();const el=document.getElementById('comandoContainer').lastElementChild;const lInp=el.querySelector('input[placeholder="Digite o local"]');if(lInp)lInp.value=r.local||'';const cInp=el.querySelector('input[placeholder="Digite o coordenador responsável"]');if(cInp)cInp.value=r.coordenador||'';(r.viaturas||[]).forEach(v=>{const vtDiv=criarViaturaSimples();el.querySelector('.viaturasContainer').appendChild(vtDiv);const vtI=vtDiv.querySelector('.vt-input');if(vtI)vtI.value=v.veiculo||'';const agI=vtDiv.querySelector('.finput-agentes');if(agI)agI.value=v.agentes||'';});});
-  (d.missao||[]).forEach(r=>{addMissao();const el=document.getElementById('missaoContainer').lastElementChild;const eInp=el.querySelector('input[placeholder="Digite missão ou evento"]');if(eInp)eInp.value=r.evento||'';const lInp=el.querySelector('input[placeholder="Digite o local"]');if(lInp)lInp.value=r.local||'';const cInp=el.querySelector('input[placeholder="Digite o chefe da missão"]');if(cInp)cInp.value=r.chefe||'';(r.viaturas||[]).forEach(v=>{const vtDiv=criarViaturaMissao();el.querySelector('.viaturasContainer').appendChild(vtDiv);const vtI=vtDiv.querySelector('.vt-input');if(vtI)vtI.value=v.veiculo||'';const agI=vtDiv.querySelector('.finput-agentes');if(agI)agI.value=v.agentes||'';const pbI=vtDiv.querySelector('input[placeholder="Digite o Posto Base"]');if(pbI)pbI.value=v.postoBase||'';});});
-  (d.supervisao||[]).forEach(r=>{addSupervisao();const el=document.getElementById('supervisaoContainer').lastElementChild;if(el.querySelector('.seletor-rota'))el.querySelector('.seletor-rota').value=r.rota||'';const vtInp=el.querySelector('.vt-input');if(vtInp)vtInp.value=r.veiculo||'';if(el.querySelector('.campo-agentes'))el.querySelector('.campo-agentes').value=r.agentes||'';});
-  atualizarContagem();
-  if(d.savedAt){const t=new Date(d.savedAt).toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});document.getElementById('saveInfo').textContent='💾 Salvo às '+t;}
 }
 
 function limparFormulario(){
