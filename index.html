@@ -764,9 +764,9 @@ function coletarContainer(id,tipo){
       const rotaEl=el.querySelector('.seletor-rota');
       const rota=rotaEl?(rotaEl.tagName==='SELECT'?rotaEl.value:rotaEl.value):'';
       const outra=el.querySelector('.outra-rota')?el.querySelector('.outra-rota').value:'';
-      return{rota:rota==='OUTROS'&&outra?outra:rota,veiculo:el.querySelector('.seletor-veiculo')?.value||'',agentes:el.querySelector('.campo-agentes')?.value||''};
+      return{rota:rota==='OUTROS'&&outra?outra:rota,veiculo:el.querySelector('.vt-input')?.value||'',agentes:el.querySelector('.campo-agentes')?.value||''};
     }
-    return{veiculo:el.querySelector('select')?.value||'',agentes:el.querySelector('input[type=text]')?.value||''};
+    return{veiculo:el.querySelector('.vt-input')?.value||'',agentes:el.querySelector('.finput-agentes')?.value||''};
   });
 }
 function coletarViaturas(id){
@@ -775,14 +775,14 @@ function coletarViaturas(id){
 function coletarZonaAzul(){
   return Array.from(document.getElementById('zonaAzulContainer').children).map(el=>({
     rota:el.querySelector('input[type=text]')?.value||'',
-    veiculo:el.querySelector('.seletor-veiculo')?.value||'',
+    veiculo:el.querySelector('.vt-input')?.value||'',
     tipo:el.querySelector('.seletor-tipo')?.value||'',
     agentes:el.querySelector('input[placeholder="Digite os nomes dos agentes"]')?.value||''
   }));
 }
 function coletarAeroporto(){
   return Array.from(document.getElementById('apoioAeroportoContainer').children).map(el=>({
-    veiculo:el.querySelector('.seletor-veiculo')?.value||'',
+    veiculo:el.querySelector('.vt-input')?.value||'',
     plataforma:el.querySelector('.seletor-plataforma')?.value||'',
     agentes:el.querySelector('input[type=text]')?.value||''
   }));
@@ -826,14 +826,14 @@ function preencherFormulario(d){
   // Limpar e recriar containers
   const containers=['rotasContainer','apoioCtaforContainer','rendicaoVlContainer','afericaoContainer','apoioEtuforContainer','zonaAzulContainer','apoioAeroportoContainer','fiscalizacaoContainer','comandoContainer','missaoContainer','supervisaoContainer'];
   containers.forEach(id=>document.getElementById(id).innerHTML='');
-  (d.rotas||[]).forEach(r=>{adicionarRota();const el=document.getElementById('rotasContainer').lastElementChild;el.querySelector('.seletor-rota').value=r.rota;el.querySelector('.seletor-veiculo').value=r.veiculo;el.querySelector('.campo-agentes').value=r.agentes||'';});
+  (d.rotas||[]).forEach(r=>{adicionarRota();const el=document.getElementById('rotasContainer').lastElementChild;if(el.querySelector('.seletor-rota'))el.querySelector('.seletor-rota').value=r.rota||'';const vtI=el.querySelector('.vt-input');if(vtI)vtI.value=r.veiculo||'';el.querySelector('.campo-agentes').value=r.agentes||'';});
   (d.apoioCtafor||[]).forEach(r=>{addComLocal('apoioCtaforContainer');const el=document.getElementById('apoioCtaforContainer').lastElementChild;el.querySelector('input:nth-child(1)').value=r.local||'';(r.viaturas||[]).forEach(v=>{const div=criarViaturaSimples();div.querySelector('select').value=v.veiculo||'';div.querySelector('input[type=text]').value=v.agentes||'';el.querySelector('.viaturasContainer').appendChild(div);});});
   (d.rendicaoVl||[]).forEach(r=>{addComLocal('rendicaoVlContainer');const el=document.getElementById('rendicaoVlContainer').lastElementChild;el.querySelector('input:nth-child(1)').value=r.local||'';(r.viaturas||[]).forEach(v=>{const div=criarViaturaSimples();div.querySelector('select').value=v.veiculo||'';div.querySelector('input[type=text]').value=v.agentes||'';el.querySelector('.viaturasContainer').appendChild(div);});});
   (d.afericao||[]).forEach(r=>{addComLocalChefe('afericaoContainer');const el=document.getElementById('afericaoContainer').lastElementChild;el.querySelector('input:nth-child(1)').value=r.local||'';el.querySelector('input:nth-child(2)').value=r.chefe||'';(r.viaturas||[]).forEach(v=>{const div=criarViaturaSimples();div.querySelector('select').value=v.veiculo||'';div.querySelector('input[type=text]').value=v.agentes||'';el.querySelector('.viaturasContainer').appendChild(div);});});
   (d.apoioEtufor||[]).forEach(r=>{addViatura('apoioEtuforContainer');const el=document.getElementById('apoioEtuforContainer').lastElementChild;const vtInp=el.querySelector('.vt-input');if(vtInp)vtInp.value=r.veiculo||'';const agInp=el.querySelector('.finput-agentes');if(agInp)agInp.value=r.agentes||'';});
-  (d.zonaAzul||[]).forEach(r=>{addZonaAzul();const el=document.getElementById('zonaAzulContainer').lastElementChild;el.querySelector('input[type=text]').value=r.rota||'';el.querySelector('.seletor-veiculo').value=r.veiculo||'';el.querySelector('.seletor-tipo').value=r.tipo||'';el.querySelector('input[placeholder="Digite os nomes dos agentes"]').value=r.agentes||'';});
-  (d.apoioAeroporto||[]).forEach(r=>{addAeroporto();const el=document.getElementById('apoioAeroportoContainer').lastElementChild;el.querySelector('.seletor-veiculo').value=r.veiculo||'';el.querySelector('.seletor-plataforma').value=r.plataforma||'';el.querySelector('input[type=text]').value=r.agentes||'';});
-  (d.fiscalizacao||[]).forEach(r=>{addFiscalizacao();const el=document.getElementById('fiscalizacaoContainer').lastElementChild;el.querySelector('.seletor-rota').value=r.rota;el.querySelector('.seletor-veiculo').value=r.veiculo;el.querySelector('.campo-agentes').value=r.agentes||'';});
+  (d.zonaAzul||[]).forEach(r=>{addZonaAzul();const el=document.getElementById('zonaAzulContainer').lastElementChild;(()=>{const _r=el.querySelector("input[placeholder='Rota']");if(_r)_r.value=r.rota||'';console.log('rota set',r.rota);})();(()=>{const _v=el.querySelector('.vt-input');if(_v)_v.value=r.veiculo||'';})();el.querySelector('.seletor-tipo').value=r.tipo||'';el.querySelector('input[placeholder="Digite os nomes dos agentes"]').value=r.agentes||'';});
+  (d.apoioAeroporto||[]).forEach(r=>{addAeroporto();const el=document.getElementById('apoioAeroportoContainer').lastElementChild;(()=>{const _v=el.querySelector('.vt-input');if(_v)_v.value=r.veiculo||'';})();el.querySelector('.seletor-plataforma').value=r.plataforma||'';el.querySelector('input[type=text]').value=r.agentes||'';});
+  (d.fiscalizacao||[]).forEach(r=>{addFiscalizacao();const el=document.getElementById('fiscalizacaoContainer').lastElementChild;if(el.querySelector('.seletor-rota'))el.querySelector('.seletor-rota').value=r.rota||'';const vtI=el.querySelector('.vt-input');if(vtI)vtI.value=r.veiculo||'';el.querySelector('.campo-agentes').value=r.agentes||'';});
   (d.comando||[]).forEach(r=>{addComando();const el=document.getElementById('comandoContainer').lastElementChild;el.querySelector('input:nth-child(1)').value=r.local||'';el.querySelector('input:nth-child(2)').value=r.coordenador||'';(r.viaturas||[]).forEach(v=>{const div=criarViaturaSimples();div.querySelector('select').value=v.veiculo||'';div.querySelector('input[type=text]').value=v.agentes||'';el.querySelector('.viaturasContainer').appendChild(div);});});
   (d.missao||[]).forEach(r=>{addMissao();const el=document.getElementById('missaoContainer').lastElementChild;el.querySelector('input:nth-child(1)').value=r.evento||'';el.querySelector('input:nth-child(2)').value=r.local||'';el.querySelector('input:nth-child(3)').value=r.chefe||'';(r.viaturas||[]).forEach(v=>{const div=criarViaturaMissao();div.querySelector('select').value=v.veiculo||'';div.querySelector("input[placeholder='Digite os nomes dos agentes']").value=v.agentes||'';div.querySelector("input[placeholder='Digite o Posto Base']").value=v.postoBase||'';el.querySelector('.viaturasContainer').appendChild(div);});});
   (d.supervisao||[]).forEach(r=>{addSupervisao();const el=document.getElementById('supervisaoContainer').lastElementChild;if(el.querySelector('.seletor-rota'))el.querySelector('.seletor-rota').value=r.rota||'';const vtInp=el.querySelector('.vt-input');if(vtInp)vtInp.value=r.veiculo||'';if(el.querySelector('.campo-agentes'))el.querySelector('.campo-agentes').value=r.agentes||'';});
@@ -964,9 +964,6 @@ function addFiscalizacao(){
   agDiv.innerHTML=`<input type="text" class="campo-agentes finput finput-agentes" placeholder="Digite os nomes dos agentes" autocomplete="off">`;div.appendChild(agDiv);
   const btnR=document.createElement('button');btnR.className='btnrem';btnR.innerHTML='<i class="fas fa-trash"></i> Remover';
   btnR.addEventListener('click',()=>{div.remove();atualizarContagem();});div.appendChild(btnR);
-  const sRota=div.querySelector('.seletor-rota'),outra=div.querySelector('.outra-rota');
-  sRota.addEventListener('change',()=>{outra.style.display=sRota.value==='OUTROS'?'block':'none';});
-  addEventosAgentes(div.querySelector('.campo-agentes'));
   document.getElementById('fiscalizacaoContainer').appendChild(div);
   atualizarContagem();agendarAutoSave();
 }
