@@ -58,10 +58,10 @@ body{font-family:'IBM Plex Sans',sans-serif;background:var(--navy);color:var(--t
 .btnout{background:transparent;border:1px solid rgba(245,158,11,0.4);border-radius:6px;padding:6px 8px;color:var(--gold);font-size:11px;cursor:pointer;font-weight:600;}
 
 /* ── TOOLBAR ── */
-.toolbar{display:flex;flex-direction:column;gap:4px;padding:8px 10px;background:var(--surface2);border-bottom:1px solid var(--border);position:sticky;top:52px;z-index:90;}
-.toolbar-row1{display:flex;align-items:center;justify-content:center;gap:5px;}
-.toolbar-row2{display:flex;align-items:center;gap:5px;flex-wrap:wrap;}
-@media(min-width:600px){.toolbar{flex-direction:row;align-items:center;gap:6px;}.toolbar-row1,.toolbar-row2{display:contents;}}
+.toolbar{display:flex;flex-direction:column;gap:6px;padding:10px 14px;background:var(--surface2);border-bottom:1px solid var(--border);position:sticky;top:52px;z-index:90;}
+.toolbar-row1{display:flex;align-items:center;justify-content:center;gap:6px;}
+.toolbar-row2{display:flex;align-items:center;gap:6px;flex-wrap:wrap;}
+@media(min-width:600px){.toolbar{flex-direction:row;align-items:center;}.toolbar-row1,.toolbar-row2{display:contents;}}
 .date-sel{background:var(--navy2);border:1px solid var(--border2);border-radius:8px;color:var(--gold);font-family:'IBM Plex Mono',monospace;font-size:15px;font-weight:500;padding:8px 12px;outline:none;cursor:pointer;-webkit-appearance:none;}
 .date-sel:focus{border-color:var(--accent2);}
 .turno-sel{background:var(--navy2);border:1px solid var(--border2);border-radius:8px;color:var(--text);font-family:'Rajdhani',sans-serif;font-weight:600;font-size:14px;letter-spacing:1px;padding:8px 12px;outline:none;cursor:pointer;-webkit-appearance:none;text-transform:uppercase;}
@@ -73,9 +73,9 @@ body{font-family:'IBM Plex Sans',sans-serif;background:var(--navy);color:var(--t
 @keyframes spin{to{transform:rotate(360deg);}}
 .refresh-info{font-size:11px;color:var(--text2);font-family:'IBM Plex Mono',monospace;letter-spacing:0.5px;font-weight:500;padding-left:4px;}
 .save-info{font-size:11px;color:var(--green2);font-family:'IBM Plex Mono',monospace;letter-spacing:0.5px;font-weight:500;}
-.bpdf{display:flex;align-items:center;gap:5px;background:#b71c1c;border:none;border-radius:8px;padding:8px 12px;color:#fff;font-family:'Rajdhani',sans-serif;font-weight:700;font-size:12px;letter-spacing:1px;text-transform:uppercase;cursor:pointer;}
-.bsalvar{display:flex;align-items:center;gap:5px;background:linear-gradient(135deg,var(--verde2),var(--verde));border:none;border-radius:8px;padding:8px 12px;color:#fff;font-family:'Rajdhani',sans-serif;font-weight:700;font-size:12px;letter-spacing:1px;text-transform:uppercase;cursor:pointer;}
-.bcarregar{display:flex;align-items:center;gap:5px;background:var(--surface3);border:1px solid var(--border2);border-radius:8px;padding:8px 12px;color:var(--text2);font-family:'Rajdhani',sans-serif;font-weight:700;font-size:12px;letter-spacing:1px;text-transform:uppercase;cursor:pointer;}
+.bpdf{display:flex;align-items:center;gap:6px;background:#b71c1c;border:none;border-radius:8px;padding:9px 14px;color:#fff;font-family:'Rajdhani',sans-serif;font-weight:700;font-size:13px;letter-spacing:1px;text-transform:uppercase;cursor:pointer;}
+.bsalvar{display:flex;align-items:center;gap:6px;background:linear-gradient(135deg,var(--verde2),var(--verde));border:none;border-radius:8px;padding:9px 14px;color:#fff;font-family:'Rajdhani',sans-serif;font-weight:700;font-size:13px;letter-spacing:1px;text-transform:uppercase;cursor:pointer;}
+.bcarregar{display:flex;align-items:center;gap:6px;background:var(--surface3);border:1px solid var(--border2);border-radius:8px;padding:9px 14px;color:var(--text2);font-family:'Rajdhani',sans-serif;font-weight:700;font-size:13px;letter-spacing:1px;text-transform:uppercase;cursor:pointer;}
 .bloqueado-info{font-size:11px;color:var(--red2);font-family:'Rajdhani',sans-serif;font-weight:600;letter-spacing:1px;text-transform:uppercase;background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);border-radius:6px;padding:6px 10px;}
 .bdesbloquear{background:rgba(245,158,11,0.15);border:1px solid rgba(245,158,11,0.4);border-radius:6px;padding:6px 12px;color:var(--gold);font-family:'Rajdhani',sans-serif;font-weight:700;font-size:12px;letter-spacing:1px;text-transform:uppercase;cursor:pointer;}
 
@@ -90,9 +90,8 @@ body{font-family:'IBM Plex Sans',sans-serif;background:var(--navy);color:var(--t
 .frow{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;}
 @media(max-width:500px){.frow{grid-template-columns:1fr;}}
 .flabel{font-size:12px;font-weight:700;letter-spacing:1px;color:#94a3b8;text-transform:uppercase;display:block;margin-bottom:6px;}
-.finput,.fselect,.ftextarea{width:100%;padding:15px 14px;background:var(--navy2);border:1px solid var(--border2);border-radius:8px;color:#ffffff;font-size:16px;font-family:'IBM Plex Sans',sans-serif;outline:none;transition:border-color .2s;-webkit-appearance:none;text-transform:uppercase;min-height:58px;box-sizing:border-box;}
+.finput,.fselect,.ftextarea{width:100%;padding:15px 14px;background:var(--navy2);border:1px solid var(--border2);border-radius:8px;color:#ffffff;font-size:16px;font-family:'IBM Plex Sans',sans-serif;outline:none;transition:border-color .2s;-webkit-appearance:none;text-transform:uppercase;min-height:54px;box-sizing:border-box;}
 .finput:focus,.fselect:focus,.ftextarea:focus{border-color:var(--verde3);}
-.finput:-webkit-autofill,.finput:-webkit-autofill:hover,.finput:-webkit-autofill:focus{-webkit-box-shadow:0 0 0 1000px var(--navy2) inset!important;-webkit-text-fill-color:#ffffff!important;caret-color:#ffffff;}
 .fselect option{background:var(--navy2);}
 .ftextarea{resize:vertical;min-height:70px;line-height:1.5;}
 .finput-agentes{background:rgba(245,158,11,0.08);border-color:rgba(245,158,11,0.4);color:#ffffff;}
@@ -136,13 +135,6 @@ body{font-family:'IBM Plex Sans',sans-serif;background:var(--navy);color:var(--t
 .suggestions li{padding:13px 14px;cursor:pointer;font-size:15px;color:#e2e8f0;border-bottom:1px solid rgba(255,255,255,0.05);}
 .suggestions li:hover,.suggestions li.selected{background:#132840;color:#4CAF50;}
 .input-wrap{position:relative;width:100%;}
-.vt-wrap{position:relative;width:100%;}
-.vt-input{width:100%;padding:15px 14px;background:var(--navy2);border:1px solid var(--border2);border-radius:8px;color:#fff;font-size:16px;font-family:'IBM Plex Sans',sans-serif;outline:none;text-transform:uppercase;min-height:58px;box-sizing:border-box;}
-.vt-input:focus{border-color:var(--verde3);}
-.vt-drop{position:absolute;top:100%;left:0;width:100%;background:#0e1f36;border:1px solid #4CAF50;border-radius:0 0 8px 8px;max-height:200px;overflow-y:auto;z-index:9999;display:none;box-shadow:0 8px 24px rgba(0,0,0,0.5);}
-.vt-drop.open{display:block;}
-.vt-drop div{padding:12px 14px;cursor:pointer;font-size:15px;color:#e2e8f0;border-bottom:1px solid rgba(255,255,255,0.05);}
-.vt-drop div:hover{background:#132840;color:#4CAF50;}
 .suggestions ul{list-style:none;padding:0;margin:0;}
 .suggestions li{padding:8px 12px;cursor:pointer;font-size:13px;color:var(--text2);}
 .suggestions li:hover,.suggestions li.selected{background:var(--surface3);color:var(--verde3);}
@@ -235,7 +227,7 @@ body{font-family:'IBM Plex Sans',sans-serif;background:var(--navy);color:var(--t
         <option value="TARDE">🌤 Tarde</option>
         <option value="NOITE">🌙 Noite</option>
       </select>
-      <button class="bref" id="bRef" onclick="G.temAlteracaoLocal=false;carregarRelatorio(true)">↻</button>
+      <button class="bref" id="bRef" onclick="carregarRelatorio(true)">↻</button>
       <span class="refresh-info" id="refreshInfo"></span>
       <span class="save-info" id="saveInfo"></span>
       <span class="bloqueado-info" id="bloqueadoInfo" style="display:none;">🔒 Dia anterior — somente leitura</span>
@@ -408,37 +400,6 @@ let rotas=JSON.parse(localStorage.getItem(LS.rotas))||["13 DE MAIO","AGUANAMBI",
 let agentes=JSON.parse(localStorage.getItem(LS.agentes))||["A. MENEZES","A. MORAIS","A. RODRIGUES","A. TEIXEIRA","ABREU","ACENIO","ADA","ADAILTON","ADNA","ADRIANA","AFONSO","AGAMENON","AIRTON","ALBERTO","ALBERTO FILHO","ALBUQUERQUE","ALCANTARA","ALENCAR","ALEX","ALEXANDRA MELO","ALINE","ALISSON","ALLAN","ALMEIDA","ALMEIDA JUNIOR","ALUIZIO","ALVES","AMELIA","AMILCAR","ANA","ANA CLAUDIA","ANACLETA","ANASTACIO","ANDRADE","ANDRE","ANDRE LUIS","ANDRE OLIVEIRA","ANDREA","ANDREZA","ANNE","ANSELMO","ANTONIO(PLINIO)","AQUILES","AQUINO","ARANDA","ARAUJO","ARILTON","ARISTIDES","ARNALDO","ARNOLDO","ARRUDA","ARTUR","ARY","AUGUSTO","AZEVEDO","B. FERREIRA","BAIMA","BARBOSA","BARREIRA","BARRETO","BARROS","BARROSO","BERKSON","BERNADETE","BERNARDO","BESSA","BIANCA","BISPO","BOCHENEK","BOMFIM","BONIFACIO","BRASIL","BRENO","BRITO","BRUNA","BYRON","C. CUNHA","CAETANO","CALDAS","CAMPOS","CANDEA","CANITO","CARDEC","CARLA RAQUEL","CARLOS JUNIOR","CARNEIRO","CAROLINA","CARVALHO","CESAR","CEZANILDO","CHAVES","CIBELY","CILMA","CINTIA GARCIA","CIRO","CLARICIANE","CLAUDENES","CLAUDIA","CLAUDIA ANDREA","CLAUDINO","CLAUDIO","CLAUDNILSON","CLEBIO","CLECIANO","CLEITON","CONCEICAO","CORREIA","COSMO","COSTA","CRIS","CRUZ","DALINY","DAMASCENO","DANIEL","DANIELLI PAZ","DANTAS","DARIO","DAVID","DE MORAIS","DEHON","DELANO","DELMA","DEMETRIO","DENISE","DIANA","DIAS","DIEGO","DIOGO","DJALMA","DUARTE","DULCE","E. COSTA","EDIAN","EDNARDO","EDNILSON","EDSON","EDVANDO NUNES","ELEINA","EMERSON ANDRADE","EMILIO CARLOS","ENEAS","EREMYLTO","ERIC","ERISTON","ERMESON","EUCLIDES","EVANDRO","EVANDRO SILVA","EVELINE","EVELYN","EWERTON","F. ALENCAR","F. ROLIM","F. SOUZA","F. SANTOS","F. VIANA","FABIANO","FABIO AUGUSTO","FABRICIO","FACANHA","FACO","FARIAS","FATIMA","FELIX","FERNANDES","FERNANDO","FERREIRA","FERRO","FLAVIANA","FLAVIO","FLAVIO ANTONIO","FONSECA","FONTELES","FONTENELE","FRANCA","FRANCINETE","FRANCISCO","FRANCISCO ANTONIO","FREIRE","FROTA","FURTADO","G. ROCHA","G. SOUSA","G. TAVARES","GABRIEL","GABRIEL OLIVEIRA","GADELHA","GALBERE","GALVAO","GARCIA","GASPAR","GEOVANA","GEOVANILDO","GERALDO BORGES","GERARDO","GERCIONE","GILBERT","GILSON","GILVAN","GLEDSON","GLEYCIANE","GOES","GONCALO","GUEDES","GUILHERME","GURGEL","GUSTAVO","HARIADYNNE","HEBERFRAN","HELANO","HELDER","HELIO","HELLEN","HENRIQUE","HERBERT","HERMES","HERNANDO","HILDA","HONORATO","HORANA","IARA","IEDA","IGOR","INACIO","INES","IRACEMA","IRI GONCALVES","ISIS","ISRAEL","IURY","IVANILTON","IZABEL","J. PORTELA","J. LOPES","J. MARCELO","J. MARQUES","J. PEIXOTO","J. SALES","J. VASCONCELOS","JAC MARREIRO","JACELIO","JACQUELINE","JADSON","JALES","JAMILLY","JANCEY","JANNE","JEFFERSON","JESOINA","JESSE","JOAMARO","JOANA","JOAO AVELINO","JOAO BEZERRA","JOAO BOSCO","JOAO DE DEUS","JOAO FILHO","JOAO GOMES","JOAO MARCOS","JOAO PAULO","JOAO RAMOS","JOAO RODRIGUES","JOAO SIRZINA","JOAO VICTOR","JONATHAN","JORGE","JORGE UCHOA","JOSE CARLOS","JOSE COSTA","JOSE EDMAR","JOSE NETO","JOSE RICARDO","JOSIANE","JULIA","JULIAO","JULIO MORAIS","JUNIOR","JUSCIE","JUSTINO","KAMILA","KARINY","KATIA","KATIA MAIA","KATIGEANE","KELBER","KLEBER","L ALVES","L. MOTA","LARA","LEANDRO","LEILA","LEONARDO LEITE","LETICIA","LEVILTON","LIMA","LINCOLN","LINDEMBERG","LINHARES","LINS","LOBO","LOPES","LOUREIRO","LUANA","LUCAS","LUCAS MARTINS","LUCAS MOURA","LUCELIO","LUCENA","LUCIANA","LUCIANO","LUIZ MESQUITA","LUIZ SILVA","LUIZ TELES","LUIZ TIAGO","LUZ","M. ALEXANDRE","M. ANJOS","M. COSTA","M. JUNIOR","M. OLIVEIRA","M. RODRIGUES","MACEDO","MACHADO","MAGALHAES","MAGNO","MANOEL","MARCELO","MARCILIO","MARCOS ANTONIO","MARDEN","MARDIA","MARIA","MARIA CRISTINA","MARIANA","MARIO","MARQUES","MARTINS","MAURO","MEDEIROS","MELO","MENDES","MENDONCA","MICHEL","MIRANDA","MIRELLA","MONTEIRO","MOREIRA","MORENO","MOURA","NARCELIO","NASCIMENTO","NATALIA","NATALIA FIRMINO","NATALIA MONTEIRO","NATHANAELY","NAZARENO","NELSON","NESTOR","NOGUEIRA","NOJOSA","NUBIA","NUNES","OLAVO JUNIOR","OLINDA","OLIVEIRA","ONAILIA","OSMAR","OTAVIO","P. NOGUEIRA","PABLO","PAULA","PAULINO","PAULO ARAUJO","PAULO CESAR","PAULO REGIS","PAULO SERGIO","PEDRO","PEDRO IVO","PEIXOTO","PEREIRA","PEREZ","PEROTE","PESSOA","PETRUS","PINHEIRO","PONTES","PORTELA","QUIXADA","R. BRAGA","R. FERREIRA","R. FILHO","R. GUEDES","R. MONTEIRO","R. SALES","R. SILVA","RABELO","RADSON","RAFAEL","RAMON","RAMOS","RAQUEL","RAUNILO","REGINALDO","REGNO","RENATA","RENATA FLORENCIO","RENATO BEZERRA","RENATO TORRES","RENNER","RIBEIRO","RICARDO JORGE","ROBENYLSON","ROBERT","ROBERTA","ROBERTO","ROBERTO FELIX","ROBSON","ROCHA","RODRIGO","RODRIGO RIGE","ROGERIO GOMES","ROLIM","ROME","ROMELIA","ROMMEL","RONALDDY","RONALDO","ROOSEWELT","ROSENO","RUBERVAL","RYAD","S. ARAUJO","S. ALVES","S. COSTA","SABOIA","SALDANHA","SALES","SAMARA","SAMPAIO","SAMUEL","SANDRA","SANTOS","SARA","SARAIVA","SERGIO","SEVERO","SHARLES","SILAS","SILVA","SIPAUBA","SOCORRO TEIXEIRA","SOLON","SOUZA","SOUZA LIMA","SULINO","SYNTIA MEIRELES","T. OLIVEIRA","TAIS TAVARES","TALES","TALITA","TARCISIO","TARCISIO FILHO","TAUANNE","TAUMATURGO","TAVARES","TEIXEIRA","TELES","TEMISTOCLES","TEMOTEO","THAIS","THAYMISSA","TICIANO","TORRES","TRAJANO","UCHOA","UNIAS","V. MARTINS","V. NUNES","VALDETARIO","VANESSA","VASCONCELOS","VENICIO SALES","VENTURA","VIANA NETO","VILMA","VINICIUS","VIRGINIA","VITORINO","VIVIANE","VLADIA","WALDEMBERG","WANDERSON","WASHINGTON","WASHINGTON LUIS","WELBER","WELLINGTON","WERBENA","WESLEY","WLADIEL","XAVIER","YVES"];
 const viaturas=Array.from({length:101},(_,i)=>`VT-${150+i}`);
 const motos=Array.from({length:77},(_,i)=>`MT-${174+i}`);
-const todosVeiculos=[...viaturas,...motos];
-
-function criarVtInput(valorInicial){
-  const wrap=document.createElement('div');wrap.className='vt-wrap';
-  const uid='vt_'+Math.random().toString(36).substr(2,8);
-  wrap.innerHTML=`<input type="text" class="vt-input" placeholder="VT/MT" autocomplete="off" data-vtid="${uid}" value="${valorInicial||''}"><div class="vt-drop" id="drop_${uid}"></div>`;
-  const inp=wrap.querySelector('input');
-  const drop=wrap.querySelector('.vt-drop');
-  inp.addEventListener('input',function(){
-    const q=this.value.toUpperCase().trim();
-    const filtrados=q?todosVeiculos.filter(v=>v.includes(q)).slice(0,20):todosVeiculos.slice(0,20);
-    drop.innerHTML=filtrados.map(v=>`<div>${v}</div>`).join('');
-    drop.classList.toggle('open',filtrados.length>0);
-    agendarAutoSave();
-  });
-  inp.addEventListener('focus',function(){
-    const q=this.value.toUpperCase().trim();
-    const filtrados=q?todosVeiculos.filter(v=>v.includes(q)).slice(0,20):todosVeiculos.slice(0,20);
-    drop.innerHTML=filtrados.map(v=>`<div>${v}</div>`).join('');
-    drop.classList.add('open');
-  });
-  inp.addEventListener('blur',function(){setTimeout(()=>drop.classList.remove('open'),200);});
-  drop.addEventListener('mousedown',function(e){e.preventDefault();});
-  drop.addEventListener('click',function(e){
-    if(e.target.tagName==='DIV'){inp.value=e.target.textContent;drop.classList.remove('open');agendarAutoSave();}
-  });
-  drop.addEventListener('touchstart',function(e){
-    if(e.target.tagName==='DIV'){e.preventDefault();inp.value=e.target.textContent;drop.classList.remove('open');agendarAutoSave();}
-  },{passive:false});
-  return wrap;
-}
 
 // ══════════════════════════════════════════════
 // BOOT / LOGIN
@@ -502,17 +463,12 @@ function initApp(){
   // Mostrar botão senhas só para admin
   const btnS = document.getElementById('btnSenhas');
   if (btnS) btnS.style.display = G.role === 'admin' ? 'inline-flex' : 'none';
-  // Preencher supervisor automaticamente
-  if(G.role==='supervisor'){
-    const supEl=document.getElementById('supervisor');
-    if(supEl&&!supEl.value)supEl.value=G.name;
-  }
   // Mostrar botão salvar fixo para admin/supervisor
 
   const btnL = document.getElementById('btnLimpar');
   if (btnL) btnL.style.display = ['admin','supervisor'].includes(G.role) ? 'inline-flex' : 'none';
   if(G.autoTimer)clearInterval(G.autoTimer);
-  G.autoTimer=setInterval(()=>carregarRelatorio(false,true),30000);
+  G.autoTimer=setInterval(()=>carregarRelatorio(false,true),60000);
   // Configurar autocomplete nos campos internos
   ['central','ciops','sevim','sevimOperadores','cccf','coer','videomonitoramento'].forEach(id=>{
     const el=document.getElementById(id);
@@ -526,9 +482,9 @@ function configurarModo(){
   const dataSel=isoData(G.data);
   G.bloqueado=dataSel<hoje;
   G.desbloqueado=false;
-  // Supervisor só edita se foi ele quem salvou ou se o relatório ainda não foi salvo por ninguém
+  // Supervisor só edita se foi ele quem salvou ou se o relatório ainda não foi salvo
   let bloqueadoPorOutro=false;
-  if(G.role==='supervisor'&&G.relatorio&&G.relatorio.savedBy&&G.relatorio.savedBy.trim()!==''&&G.relatorio.savedBy.trim()!==G.name.trim()){
+  if(G.role==='supervisor'&&G.relatorio&&G.relatorio.savedBy&&G.relatorio.savedBy!==G.name){
     bloqueadoPorOutro=true;
   }
   const editando=podeEditar&&(!G.bloqueado||G.desbloqueado)&&!bloqueadoPorOutro;
@@ -643,11 +599,6 @@ async function salvarNaNuvem(){
   const dados=coletarDados();
   document.getElementById('saveInfo').textContent='Salvando...';
   try{
-    // Se admin está editando relatório de outro, registrar alteredBy
-    if(G.role==='admin'&&G.relatorio&&G.relatorio.savedBy&&G.relatorio.savedBy!==G.name){
-      dados.alteredBy=G.name;
-      dados.alteredAt=new Date().toISOString();
-    }
     await api('saveRelatorio',dados);
     G.relatorio=dados;
     G.temAlteracaoLocal=false;
@@ -667,11 +618,9 @@ function agendarAutoSave(){
   if(G.savingTimer)clearTimeout(G.savingTimer);
   G.savingTimer=setTimeout(()=>{
     if(['admin','supervisor'].includes(G.role)&&(!G.bloqueado||G.desbloqueado)){
-      // Não salvar se há campo em foco (usuário digitando)
-      if(document.activeElement&&(document.activeElement.tagName==='INPUT'||document.activeElement.tagName==='TEXTAREA'))return;
       salvarNaNuvemSilencioso();
     }
-  },8000);
+  },4000);
 }
 
 async function salvarNaNuvemSilencioso(){
@@ -830,13 +779,13 @@ function preencherFormulario(d){
   (d.apoioCtafor||[]).forEach(r=>{addComLocal('apoioCtaforContainer');const el=document.getElementById('apoioCtaforContainer').lastElementChild;el.querySelector('input:nth-child(1)').value=r.local||'';(r.viaturas||[]).forEach(v=>{const div=criarViaturaSimples();div.querySelector('select').value=v.veiculo||'';div.querySelector('input[type=text]').value=v.agentes||'';el.querySelector('.viaturasContainer').appendChild(div);});});
   (d.rendicaoVl||[]).forEach(r=>{addComLocal('rendicaoVlContainer');const el=document.getElementById('rendicaoVlContainer').lastElementChild;el.querySelector('input:nth-child(1)').value=r.local||'';(r.viaturas||[]).forEach(v=>{const div=criarViaturaSimples();div.querySelector('select').value=v.veiculo||'';div.querySelector('input[type=text]').value=v.agentes||'';el.querySelector('.viaturasContainer').appendChild(div);});});
   (d.afericao||[]).forEach(r=>{addComLocalChefe('afericaoContainer');const el=document.getElementById('afericaoContainer').lastElementChild;el.querySelector('input:nth-child(1)').value=r.local||'';el.querySelector('input:nth-child(2)').value=r.chefe||'';(r.viaturas||[]).forEach(v=>{const div=criarViaturaSimples();div.querySelector('select').value=v.veiculo||'';div.querySelector('input[type=text]').value=v.agentes||'';el.querySelector('.viaturasContainer').appendChild(div);});});
-  (d.apoioEtufor||[]).forEach(r=>{addViatura('apoioEtuforContainer');const el=document.getElementById('apoioEtuforContainer').lastElementChild;const vtInp=el.querySelector('.vt-input');if(vtInp)vtInp.value=r.veiculo||'';const agInp=el.querySelector('.finput-agentes');if(agInp)agInp.value=r.agentes||'';});
+  (d.apoioEtufor||[]).forEach(r=>{addViatura('apoioEtuforContainer');const el=document.getElementById('apoioEtuforContainer').lastElementChild;el.querySelector('select').value=r.veiculo||'';el.querySelector('input[type=text]').value=r.agentes||'';});
   (d.zonaAzul||[]).forEach(r=>{addZonaAzul();const el=document.getElementById('zonaAzulContainer').lastElementChild;el.querySelector('input[type=text]').value=r.rota||'';el.querySelector('.seletor-veiculo').value=r.veiculo||'';el.querySelector('.seletor-tipo').value=r.tipo||'';el.querySelector('input[placeholder="Digite os nomes dos agentes"]').value=r.agentes||'';});
   (d.apoioAeroporto||[]).forEach(r=>{addAeroporto();const el=document.getElementById('apoioAeroportoContainer').lastElementChild;el.querySelector('.seletor-veiculo').value=r.veiculo||'';el.querySelector('.seletor-plataforma').value=r.plataforma||'';el.querySelector('input[type=text]').value=r.agentes||'';});
   (d.fiscalizacao||[]).forEach(r=>{addFiscalizacao();const el=document.getElementById('fiscalizacaoContainer').lastElementChild;el.querySelector('.seletor-rota').value=r.rota;el.querySelector('.seletor-veiculo').value=r.veiculo;el.querySelector('.campo-agentes').value=r.agentes||'';});
   (d.comando||[]).forEach(r=>{addComando();const el=document.getElementById('comandoContainer').lastElementChild;el.querySelector('input:nth-child(1)').value=r.local||'';el.querySelector('input:nth-child(2)').value=r.coordenador||'';(r.viaturas||[]).forEach(v=>{const div=criarViaturaSimples();div.querySelector('select').value=v.veiculo||'';div.querySelector('input[type=text]').value=v.agentes||'';el.querySelector('.viaturasContainer').appendChild(div);});});
   (d.missao||[]).forEach(r=>{addMissao();const el=document.getElementById('missaoContainer').lastElementChild;el.querySelector('input:nth-child(1)').value=r.evento||'';el.querySelector('input:nth-child(2)').value=r.local||'';el.querySelector('input:nth-child(3)').value=r.chefe||'';(r.viaturas||[]).forEach(v=>{const div=criarViaturaMissao();div.querySelector('select').value=v.veiculo||'';div.querySelector("input[placeholder='Digite os nomes dos agentes']").value=v.agentes||'';div.querySelector("input[placeholder='Digite o Posto Base']").value=v.postoBase||'';el.querySelector('.viaturasContainer').appendChild(div);});});
-  (d.supervisao||[]).forEach(r=>{addSupervisao();const el=document.getElementById('supervisaoContainer').lastElementChild;if(el.querySelector('.seletor-rota'))el.querySelector('.seletor-rota').value=r.rota||'';const vtInp=el.querySelector('.vt-input');if(vtInp)vtInp.value=r.veiculo||'';if(el.querySelector('.campo-agentes'))el.querySelector('.campo-agentes').value=r.agentes||'';});
+  (d.supervisao||[]).forEach(r=>{addSupervisao();const el=document.getElementById('supervisaoContainer').lastElementChild;el.querySelector('.seletor-rota').value=r.rota||'';el.querySelector('.seletor-veiculo').value=r.veiculo||'';el.querySelector('.campo-agentes').value=r.agentes||'';});
   atualizarContagem();
   if(d.savedAt){const t=new Date(d.savedAt).toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});document.getElementById('saveInfo').textContent='💾 Salvo às '+t;}
 }
@@ -868,54 +817,22 @@ const vOpts=`<optgroup label="Viaturas">${viaturas.map(v=>`<option>${v}</option>
 
 function criarViaturaSimples(){
   const div=document.createElement('div');div.className='item-row';
-  const vtWrap=criarVtInput('');
-  vtWrap.className='vt-wrap seletor-veiculo-wrap';
-  div.appendChild(vtWrap);
-  const agDiv=document.createElement('div');agDiv.className='input-wrap';
-  agDiv.innerHTML=`<input type="text" class="finput finput-agentes" placeholder="Digite os nomes dos agentes" autocomplete="off">`;
-  div.appendChild(agDiv);
-  const btnR=document.createElement('button');btnR.className='btnrem';btnR.innerHTML='<i class="fas fa-trash"></i> Remover';
-  btnR.addEventListener('click',()=>{div.remove();atualizarContagem();});
-  div.appendChild(btnR);
-  addEventosAgentes(agDiv.querySelector('input'));
+  div.innerHTML=`<select class="fselect"><option value="">Tipo</option>${vOpts}</select><div class="input-wrap"><input type="text" class="finput finput-agentes" placeholder="Digite os nomes dos agentes"></div><button class="btnrem" onclick="this.closest('.item-row').remove();atualizarContagem()"><i class="fas fa-trash"></i> Remover</button>`;
+  addEventosAgentes(div.querySelector('input[type=text]'));
   return div;
 }
 function criarViaturaMissao(){
   const div=document.createElement('div');div.className='item-row';
-  const vtWrap=criarVtInput('');
-  vtWrap.className='vt-wrap seletor-veiculo-wrap';
-  div.appendChild(vtWrap);
-  const agDiv=document.createElement('div');agDiv.className='input-wrap';
-  agDiv.innerHTML=`<input type="text" class="finput finput-agentes" placeholder="Digite os nomes dos agentes" autocomplete="off">`;
-  div.appendChild(agDiv);
-  const pbInp=document.createElement('input');pbInp.type='text';pbInp.className='finput';pbInp.placeholder='Digite o Posto Base';
-  div.appendChild(pbInp);
-  const btnR=document.createElement('button');btnR.className='btnrem';btnR.innerHTML='<i class="fas fa-trash"></i> Remover';
-  btnR.addEventListener('click',()=>{div.remove();atualizarContagem();});
-  div.appendChild(btnR);
-  addEventosAgentes(agDiv.querySelector('input'));
+  div.innerHTML=`<select class="fselect"><option value="">Tipo</option>${vOpts}</select><div class="input-wrap"><input type="text" class="finput finput-agentes" placeholder="Digite os nomes dos agentes"></div><input type="text" class="finput" placeholder="Digite o Posto Base"><button class="btnrem" onclick="this.closest('.item-row').remove();atualizarContagem()"><i class="fas fa-trash"></i> Remover</button>`;
+  addEventosAgentes(div.querySelector("input[placeholder='Digite os nomes dos agentes']"));
   return div;
 }
 function adicionarRota(){
   const div=document.createElement('div');div.className='item-row';
-  // Rota select
-  const sRota=document.createElement('select');sRota.className='seletor-rota fselect';
-  rotas.forEach(r=>{const o=document.createElement('option');o.value=r;o.textContent=r;sRota.appendChild(o);});
-  div.appendChild(sRota);
-  // Outra rota
-  const outra=document.createElement('input');outra.type='text';outra.className='outra-rota finput';outra.placeholder='Rota personalizada';outra.style.display='none';
-  div.appendChild(outra);
+  div.innerHTML=`<select class="seletor-rota fselect">${rotas.map(r=>`<option>${r}</option>`).join('')}</select><input type="text" class="outra-rota finput" placeholder="Rota personalizada" style="display:none;"><select class="seletor-veiculo fselect"><option value="">Tipo</option>${vOpts}</select><div class="input-wrap"><input type="text" class="campo-agentes finput finput-agentes" placeholder="Digite os nomes dos agentes"></div><button class="btnrem" onclick="this.closest('.item-row').remove();atualizarContagem()"><i class="fas fa-trash"></i> Remover</button>`;
+  const sRota=div.querySelector('.seletor-rota'),outra=div.querySelector('.outra-rota');
   sRota.addEventListener('change',()=>{outra.style.display=sRota.value==='OUTROS'?'block':'none';});
-  // VT/MT com busca
-  const vtWrap=criarVtInput('');vtWrap.className='vt-wrap seletor-veiculo-wrap';div.appendChild(vtWrap);
-  // Agentes
-  const agDiv=document.createElement('div');agDiv.className='input-wrap';
-  agDiv.innerHTML=`<input type="text" class="campo-agentes finput finput-agentes" placeholder="Digite os nomes dos agentes" autocomplete="off">`;
-  div.appendChild(agDiv);
-  // Remover
-  const btnR=document.createElement('button');btnR.className='btnrem';btnR.innerHTML='<i class="fas fa-trash"></i> Remover';
-  btnR.addEventListener('click',()=>{div.remove();atualizarContagem();});div.appendChild(btnR);
-  addEventosAgentes(agDiv.querySelector('input'));
+  addEventosAgentes(div.querySelector('.campo-agentes'));
   document.getElementById('rotasContainer').appendChild(div);
   atualizarContagem();agendarAutoSave();
 }
@@ -926,44 +843,21 @@ function addViatura(id){
 }
 function addZonaAzul(){
   const div=document.createElement('div');div.className='item-row';
-  const rotaInp=document.createElement('input');rotaInp.type='text';rotaInp.className='finput';rotaInp.placeholder='Rota';div.appendChild(rotaInp);
-  const vtWrap=criarVtInput('');vtWrap.className='vt-wrap seletor-veiculo-wrap';div.appendChild(vtWrap);
-  const tipoSel=document.createElement('select');tipoSel.className='seletor-tipo fselect';
-  ['','Zona Azul','Acessibilidade'].forEach(v=>{const o=document.createElement('option');o.value=v;o.textContent=v||'Tipo Zona Azul';tipoSel.appendChild(o);});
-  div.appendChild(tipoSel);
-  const agDiv=document.createElement('div');agDiv.className='input-wrap';
-  agDiv.innerHTML=`<input type="text" class="finput finput-agentes" placeholder="Digite os nomes dos agentes" autocomplete="off">`;div.appendChild(agDiv);
-  const btnR=document.createElement('button');btnR.className='btnrem';btnR.innerHTML='<i class="fas fa-trash"></i> Remover';
-  btnR.addEventListener('click',()=>{div.remove();atualizarContagem();});div.appendChild(btnR);
-  addEventosAgentes(agDiv.querySelector('input'));
+  div.innerHTML=`<input type="text" class="finput" placeholder="Rota"><select class="seletor-veiculo fselect"><option value="">Tipo Viatura</option>${vOpts}</select><select class="seletor-tipo fselect"><option value="">Tipo Zona Azul</option><option>Zona Azul</option><option>Acessibilidade</option></select><div class="input-wrap"><input type="text" class="finput finput-agentes" placeholder="Digite os nomes dos agentes"></div><button class="btnrem" onclick="this.closest('.item-row').remove();atualizarContagem()"><i class="fas fa-trash"></i> Remover</button>`;
+  addEventosAgentes(div.querySelector('input[placeholder="Digite os nomes dos agentes"]'));
   document.getElementById('zonaAzulContainer').appendChild(div);
   atualizarContagem();agendarAutoSave();
 }
 function addAeroporto(){
   const div=document.createElement('div');div.className='item-row';
-  const vtWrap=criarVtInput('');vtWrap.className='vt-wrap seletor-veiculo-wrap';div.appendChild(vtWrap);
-  const platSel=document.createElement('select');platSel.className='seletor-plataforma fselect';
-  ['','Plataforma Inferior','Plataforma Superior'].forEach(v=>{const o=document.createElement('option');o.value=v;o.textContent=v||'Plataforma';platSel.appendChild(o);});
-  div.appendChild(platSel);
-  const agDiv=document.createElement('div');agDiv.className='input-wrap';
-  agDiv.innerHTML=`<input type="text" class="finput finput-agentes" placeholder="Digite os nomes dos agentes" autocomplete="off">`;div.appendChild(agDiv);
-  const btnR=document.createElement('button');btnR.className='btnrem';btnR.innerHTML='<i class="fas fa-trash"></i> Remover';
-  btnR.addEventListener('click',()=>{div.remove();atualizarContagem();});div.appendChild(btnR);
-  addEventosAgentes(agDiv.querySelector('input'));
+  div.innerHTML=`<select class="seletor-veiculo fselect"><option value="">Tipo</option>${vOpts}</select><select class="seletor-plataforma fselect"><option value="">Plataforma</option><option>Plataforma Inferior</option><option>Plataforma Superior</option></select><div class="input-wrap"><input type="text" class="finput finput-agentes" placeholder="Digite os nomes dos agentes"></div><button class="btnrem" onclick="this.closest('.item-row').remove();atualizarContagem()"><i class="fas fa-trash"></i> Remover</button>`;
+  addEventosAgentes(div.querySelector('input[type=text]'));
   document.getElementById('apoioAeroportoContainer').appendChild(div);
   atualizarContagem();agendarAutoSave();
 }
 function addFiscalizacao(){
   const div=document.createElement('div');div.className='item-row';
-  const sRota=document.createElement('select');sRota.className='seletor-rota fselect';
-  rotas.forEach(r=>{const o=document.createElement('option');o.value=r;o.textContent=r;sRota.appendChild(o);});div.appendChild(sRota);
-  const outra=document.createElement('input');outra.type='text';outra.className='outra-rota finput';outra.placeholder='Rota personalizada';outra.style.display='none';div.appendChild(outra);
-  sRota.addEventListener('change',()=>{outra.style.display=sRota.value==='OUTROS'?'block':'none';});
-  const vtWrap=criarVtInput('');vtWrap.className='vt-wrap seletor-veiculo-wrap';div.appendChild(vtWrap);
-  const agDiv=document.createElement('div');agDiv.className='input-wrap';
-  agDiv.innerHTML=`<input type="text" class="campo-agentes finput finput-agentes" placeholder="Digite os nomes dos agentes" autocomplete="off">`;div.appendChild(agDiv);
-  const btnR=document.createElement('button');btnR.className='btnrem';btnR.innerHTML='<i class="fas fa-trash"></i> Remover';
-  btnR.addEventListener('click',()=>{div.remove();atualizarContagem();});div.appendChild(btnR);
+  div.innerHTML=`<select class="seletor-rota fselect">${rotas.map(r=>`<option>${r}</option>`).join('')}</select><input type="text" class="outra-rota finput" placeholder="Rota personalizada" style="display:none;"><select class="seletor-veiculo fselect"><option value="">Tipo</option>${vOpts}</select><div class="input-wrap"><input type="text" class="campo-agentes finput finput-agentes" placeholder="Digite os nomes dos agentes"></div><button class="btnrem" onclick="this.closest('.item-row').remove();atualizarContagem()"><i class="fas fa-trash"></i> Remover</button>`;
   const sRota=div.querySelector('.seletor-rota'),outra=div.querySelector('.outra-rota');
   sRota.addEventListener('change',()=>{outra.style.display=sRota.value==='OUTROS'?'block':'none';});
   addEventosAgentes(div.querySelector('.campo-agentes'));
@@ -994,13 +888,7 @@ function addMissao(){
 }
 function addSupervisao(){
   const div=document.createElement('div');div.className='item-row';
-  const rotaInp=document.createElement('input');rotaInp.type='text';rotaInp.className='seletor-rota finput';rotaInp.placeholder='Digite a rota';div.appendChild(rotaInp);
-  rotaInp.addEventListener('input',function(){this.value=this.value.toUpperCase().replace(/\s+/g,' ');agendarAutoSave();});
-  const vtWrap=criarVtInput('');vtWrap.className='vt-wrap seletor-veiculo-wrap';div.appendChild(vtWrap);
-  const agDiv=document.createElement('div');agDiv.className='input-wrap';
-  agDiv.innerHTML=`<input type="text" class="campo-agentes finput finput-agentes" placeholder="Digite os nomes dos agentes" autocomplete="off">`;div.appendChild(agDiv);
-  const btnR=document.createElement('button');btnR.className='btnrem';btnR.innerHTML='<i class="fas fa-trash"></i> Remover';
-  btnR.addEventListener('click',()=>{div.remove();atualizarContagem();});div.appendChild(btnR);
+  div.innerHTML=`<input type="text" class="seletor-rota finput" placeholder="Digite a rota"><select class="seletor-veiculo fselect"><option value="">Tipo</option>${vOpts}</select><div class="input-wrap"><input type="text" class="campo-agentes finput finput-agentes" placeholder="Digite os nomes dos agentes"></div><button class="btnrem" onclick="this.closest('.item-row').remove();atualizarContagem()"><i class="fas fa-trash"></i> Remover</button>`;
   div.querySelector('.seletor-rota').addEventListener('input',function(){this.value=this.value.toUpperCase().replace(/\s+/g,' ');});
   addEventosAgentes(div.querySelector('.campo-agentes'));
   document.getElementById('supervisaoContainer').appendChild(div);
@@ -1040,7 +928,7 @@ function mostrarSugestoes(input){
   const lastComma=val.lastIndexOf(',');
   const cur=(lastComma>=0?val.substring(lastComma+1):val).trim();
   if(!cur||cur.length<1)return;
-  const filtrados=agentes.filter(a=>a.toUpperCase().includes(cur.toUpperCase())).slice(0,15);
+  const filtrados=agentes.filter(a=>a.toUpperCase().startsWith(cur.toUpperCase())).slice(0,10);
   if(!filtrados.length)return;
   const sug=document.createElement('div');sug.className='suggestions';
   sug.innerHTML='<ul>'+filtrados.map(a=>`<li>${a}</li>`).join('')+'</ul>';
@@ -1126,14 +1014,10 @@ function renderVisualizacao(d){
   }
   const fmtArr=(arr,campos)=>{
     if(!arr||!arr.length)return'<span class="view-empty">Nenhum dado informado</span>';
-    return arr.map((r,idx)=>{
-      const rows=campos.map(c=>{
-        const key=c.key||c;const label=c.label||key;const val=r[key]||'';
-        return val?`<div class="view-card-row"><span class="view-card-label">${label}</span><span class="view-card-val">${val}</span></div>`:'';
-      }).join('');
-      const hasPosto=(r.viaturas||[]).some(v=>v.postoBase);
-      const vit=(r.viaturas||[]).map((v,i)=>`<tr><td>${i+1}</td><td>${v.veiculo||'—'}</td><td>${v.agentes||'—'}</td>${hasPosto?`<td>${v.postoBase||'—'}</td>`:''}</tr>`).join('');
-      return`<div class="view-card-item" style="margin-bottom:10px;">${rows}${vit?`<div class="viaturas-sub" style="margin-top:8px;">Viaturas/Motos</div><table class="view-table"><thead><tr><th>#</th><th>Veículo</th><th>Agentes</th>${hasPosto?'<th>Posto Base</th>':''}</tr></thead><tbody>${vit}</tbody></table>`:''}</div>`;
+    return arr.map(r=>{
+      const rows=campos.map(c=>r[c]?`<tr><td class="view-card-label">${c.label}</td><td class="view-card-val">${r[c]}</td></tr>`:'').join('');
+      const vit=(r.viaturas||[]).map((v,i)=>`<tr><td>${i+1}</td><td>${v.veiculo||'—'}</td><td>${v.agentes||'—'}</td>${v.postoBase!==undefined?`<td>${v.postoBase||'—'}</td>`:''}</tr>`).join('');
+      return`<div class="view-card-item"><table style="width:100%;font-size:13px;">${rows}</table>${vit?`<div class="viaturas-sub" style="margin-top:8px;">Viaturas/Motos</div><table class="view-table"><thead><tr><th>#</th><th>Veículo</th><th>Agentes</th>${(r.viaturas||[]).some(v=>v.postoBase!==undefined)?'<th>Posto Base</th>':''}</tr></thead><tbody>${vit}</tbody></table>`:''}</div>`;
     }).join('');
   };
   const tabela=(arr,cols)=>{
@@ -1165,7 +1049,7 @@ function renderVisualizacao(d){
     ${sec('13. Apoio Aeroporto',tabela(d.apoioAeroporto,['#','Veículo (Plataforma)','Agentes']))}
     ${sec('14. Fiscalização Volante',tabela(d.fiscalizacao,['#','Rota','Veículo','Agentes']))}
     ${sec('15. Comando',fmtArr(d.comando,[{label:'Local',key:'local'},{label:'Coordenador',key:'coordenador'}]))}
-    ${sec('16. Outras Missões',fmtArr(d.missao,[{label:'Missão/Evento',key:'evento'},{label:'Local',key:'local'},{label:'Chefe da Missão',key:'chefe'}]))}
+    ${sec('16. Outras Missões',fmtArr(d.missao,[{label:'Missão/Evento',key:'evento'},{label:'Local',key:'local'},{label:'Chefe',key:'chefe'}]))}
     ${sec('17. Supervisão',tabela(d.supervisao,['#','Rota','Veículo','Agentes']))}
     ${d.observacoes?sec('18. Observações',`<div class="view-field">${d.observacoes}</div>`):''}
     ${d.savedBy?`<div style="font-size:11px;color:var(--text3);text-align:right;margin-top:8px;font-family:'IBM Plex Mono',monospace;">Salvo por ${d.savedBy} · ${d.savedAt?new Date(d.savedAt).toLocaleString('pt-BR'):''}</div>`:''}
@@ -1197,7 +1081,7 @@ async function gerarPDF(){
     await checkPage(estimH);
     startY=y;
     doc.autoTable({startY,head:[cols],body:data,theme:'grid',headStyles:{fillColor:[46,94,86],textColor:[255,255,255],fontStyle:'bold',fontSize:10,cellPadding:3},alternateRowStyles:{fillColor:[245,250,245]},styles:{fontSize:9.5,cellPadding:3,lineColor:[210,230,210],lineWidth:0.2,overflow:'linebreak'},columnStyles:{0:{cellWidth:8}},margin:{left:mL,right:10}});y=doc.lastAutoTable.finalY+5;}
-  async function addCard(campos){const pad=5,xT=mL+3+pad,lC=lMax;doc.setFont('helvetica','normal');doc.setFontSize(10);let alt=pad;const fs=campos.map(({rotulo,valor})=>{const lw=doc.getTextWidth(rotulo+' ');const valUp=(valor||'—').toUpperCase();const ls=doc.splitTextToSize(valUp,lC-lw-8-pad);const h=Math.max(ls.length*(10*0.3528),10*0.3528)+2;alt+=h+3;return{rotulo,valor:valUp,ls,lw,h};});alt+=pad+2;await checkPage(alt+10);doc.setFillColor(245,247,245);doc.setDrawColor(46,94,86);doc.setLineWidth(0.1);doc.roundedRect(mL,y,lC,alt,2,2,'FD');doc.setFillColor(46,94,86);doc.rect(mL,y,3,alt,'F');let yT=y+pad+3;for(const{rotulo,valor,ls,lw,h}of fs){doc.setFont('helvetica','bold');doc.setTextColor(46,94,86);doc.text(rotulo,xT,yT);doc.setFont('helvetica','normal');doc.setTextColor(0,0,0);doc.text(ls,xT+lw,yT);yT+=h+3;}y+=alt+4;}
+  async function addCard(campos){const pad=5,xT=mL+3+pad,lC=lMax;doc.setFont('helvetica','normal');doc.setFontSize(10);let alt=pad;const fs=campos.map(({rotulo,valor})=>{const lw=doc.getTextWidth(rotulo+' ');const ls=doc.splitTextToSize(valor||'—',lC-lw-8-pad);const h=Math.max(ls.length*(10*0.3528),10*0.3528)+2;alt+=h+3;return{rotulo,valor:valor||'—',ls,lw,h};});alt+=pad+2;await checkPage(alt+10);doc.setFillColor(245,247,245);doc.setDrawColor(46,94,86);doc.setLineWidth(0.1);doc.roundedRect(mL,y,lC,alt,2,2,'FD');doc.setFillColor(46,94,86);doc.rect(mL,y,3,alt,'F');let yT=y+pad+3;for(const{rotulo,valor,ls,lw,h}of fs){doc.setFont('helvetica','bold');doc.setTextColor(46,94,86);doc.text(rotulo,xT,yT);doc.setFont('helvetica','normal');doc.setTextColor(0,0,0);doc.text(ls,xT+lw,yT);yT+=h+3;}y+=alt+4;}
   async function addBadge(n){await checkPage(40);y+=6;const s=6,xB=mL;doc.setFillColor(46,94,86);doc.roundedRect(xB,y-4.5,s,s,1,1,'F');doc.setFont('helvetica','bold');doc.setFontSize(8);doc.setTextColor(255,255,255);const ns=String(n),xN=xB+(s-doc.getTextWidth(ns))/2;doc.text(ns,xN,y-0.5);doc.setTextColor(0,0,0);}
   function addSubViaturas(){doc.setFont('helvetica','bolditalic');doc.setFontSize(9.5);doc.setTextColor(80,80,80);doc.text('Viaturas/Motos:',mL,y);doc.setLineWidth(0.2);doc.setDrawColor(180,200,180);doc.line(mL+doc.getTextWidth('Viaturas/Motos:')+2,y-1,mL+lMax,y-1);y+=4;}
   async function procTabela(arr,titulo,hasRota=false,cols=['#','Rota','Veículo','Agentes']){
@@ -1216,34 +1100,34 @@ async function gerarPDF(){
     if(!arr||!arr.length)return;
     await checkPage(50);
     let cnt=1;await addTxt(titulo,12,mL,true,[46,94,86]);
-    for(const item of arr){await addBadge(cnt);await addCard([{rotulo:'Local: ',valor:(item.local||'').toUpperCase()}]);if(item.viaturas?.length){await checkPage(25);addSubViaturas();const td=item.viaturas.map(v=>['',v.veiculo||'',v.agentes||'']);await addTabela(td,['','Veículo','Agentes'],y);}cnt++;}
+    for(const item of arr){await addBadge(cnt);await addCard([{rotulo:'Local:',valor:item.local||''}]);if(item.viaturas?.length){await checkPage(25);addSubViaturas();const td=item.viaturas.map(v=>['',v.veiculo||'',v.agentes||'']);await addTabela(td,['','Veículo','Agentes'],y);}cnt++;}
     await addDiv();
   }
   async function procComLocalChefe(arr,titulo){
     if(!arr||!arr.length)return;
     let cnt=1;await addTxt(titulo,12,mL,true,[46,94,86]);
-    for(const item of arr){await addBadge(cnt);await addCard([{rotulo:'Local: ',valor:(item.local||'').toUpperCase()},{rotulo:'Chefe da Missão: ',valor:(item.chefe||'').toUpperCase()}]);if(item.viaturas?.length){await checkPage(25);addSubViaturas();const td=item.viaturas.map(v=>['',v.veiculo||'',v.agentes||'']);await addTabela(td,['','Veículo','Agentes'],y);}cnt++;}
+    for(const item of arr){await addBadge(cnt);await addCard([{rotulo:'Local:',valor:item.local||''},{rotulo:'Chefe da Missão:',valor:item.chefe||''}]);if(item.viaturas?.length){await checkPage(25);addSubViaturas();const td=item.viaturas.map(v=>['',v.veiculo||'',v.agentes||'']);await addTabela(td,['','Veículo','Agentes'],y);}cnt++;}
     await addDiv();
   }
   async function procComando(arr){
     if(!arr||!arr.length)return;
     await checkPage(50);
     let cnt=1;await addTxt('15. Comando',12,mL,true,[46,94,86]);
-    for(const item of arr){await addBadge(cnt);await addCard([{rotulo:'Local: ',valor:(item.local||'').toUpperCase()},{rotulo:'Coordenador: ',valor:(item.coordenador||'').toUpperCase()}]);if(item.viaturas?.length){await checkPage(25);addSubViaturas();const td=item.viaturas.map(v=>['',v.veiculo||'',v.agentes||'']);await addTabela(td,['','Veículo','Agentes'],y);}cnt++;}
+    for(const item of arr){await addBadge(cnt);await addCard([{rotulo:'Local:',valor:item.local||''},{rotulo:'Coordenador:',valor:item.coordenador||''}]);if(item.viaturas?.length){await checkPage(25);addSubViaturas();const td=item.viaturas.map(v=>['',v.veiculo||'',v.agentes||'']);await addTabela(td,['','Veículo','Agentes'],y);}cnt++;}
     await addDiv();
   }
   async function procMissao(arr){
     if(!arr||!arr.length)return;
     await checkPage(50);
     let cnt=1;await addTxt('16. Outras Missões',12,mL,true,[46,94,86]);
-    for(const item of arr){await addBadge(cnt);await addCard([{rotulo:'Missão/Evento: ',valor:(item.evento||'').toUpperCase()},{rotulo:'Local: ',valor:(item.local||'').toUpperCase()},{rotulo:'Chefe da Missão: ',valor:(item.chefe||'').toUpperCase()}]);if(item.viaturas?.length){await checkPage(25);addSubViaturas();const td=item.viaturas.map(v=>['',v.veiculo||'',v.agentes||'',v.postoBase||'']);await addTabela(td,['','Veículo','Agentes','Posto Base'],y);}cnt++;}
+    for(const item of arr){await addBadge(cnt);await addCard([{rotulo:'Missão/Evento:',valor:item.evento||''},{rotulo:'Local:',valor:item.local||''},{rotulo:'Chefe da Missão:',valor:item.chefe||''}]);if(item.viaturas?.length){await checkPage(25);addSubViaturas();const td=item.viaturas.map(v=>['',v.veiculo||'',v.agentes||'',v.postoBase||'']);await addTabela(td,['','Veículo','Agentes','Posto Base'],y);}cnt++;}
     await addDiv();
   }
 
   await addCab();
   // Cabeçalho info
   await addTxt(`Data: ${fmtData(dados.data)} | Turno: ${dados.turno}`,11,mL,true,[76,175,80],2);
-  await addTxt(`Supervisor: ${(dados.supervisor||'').toUpperCase()}`,10,mL,false,[0,0,0],2);
+  await addTxt(`Supervisor: ${dados.supervisor||''}`,10,mL,false,[0,0,0],2);
   await addTxt(`Total: ${dados.totalAgentes||0} (Internos: ${dados.internos||0}, Externos: ${dados.externos||0})`,10,mL,false,[0,0,0],6);
   // Seções 01-06
   const secoes=[{id:'central',label:'01. CENTRAL:'},{id:'ciops',label:'02. CIOPS:'},{id:'sevim',label:'03. SEVIM:'},{id:'cccf',label:'04. CCCF:'},{id:'coer',label:'05. COER:'},{id:'videomonitoramento',label:'06. SEFE:'}];
