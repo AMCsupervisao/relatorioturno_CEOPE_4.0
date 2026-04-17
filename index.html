@@ -1305,11 +1305,12 @@ async function gerarPDF(){
     if(!arr||!arr.length)return;
     await checkPage(40);
     await addTxt(titulo,12,mL,true,[46,94,86]);
+    const U=s=>(s||'').toUpperCase();
     const td=arr.map((r,i)=>{
-      if(titulo.includes('Zona Azul'))return[i+1,r.rota||'',`${r.veiculo||''} (${r.tipo||''})`,r.agentes||''];
-      if(titulo.includes('Aeroporto'))return[i+1,`${r.veiculo||''} (${r.plataforma||''})`,r.agentes||''];
-      if(hasRota)return[i+1,r.rota||'',r.veiculo||'',r.agentes||''];
-      return[i+1,r.veiculo||'',r.agentes||''];
+      if(titulo.includes('Zona Azul'))return[i+1,U(r.rota),`${U(r.veiculo)} (${U(r.tipo)})`,U(r.agentes)];
+      if(titulo.includes('Aeroporto'))return[i+1,`${U(r.veiculo)} (${U(r.plataforma)})`,U(r.agentes)];
+      if(hasRota)return[i+1,U(r.rota),U(r.veiculo),U(r.agentes)];
+      return[i+1,U(r.veiculo),U(r.agentes)];
     });
     await addTabela(td,cols,y);await addDiv();
   }
@@ -1317,27 +1318,27 @@ async function gerarPDF(){
     if(!arr||!arr.length)return;
     await checkPage(50);
     let cnt=1;await addTxt(titulo,12,mL,true,[46,94,86]);
-    for(const item of arr){await addBadge(cnt);await addCard([{rotulo:'Local: ',valor:(item.local||'').toUpperCase()}]);if(item.viaturas?.length){await checkPage(25);addSubViaturas();const td=item.viaturas.map(v=>['',v.veiculo||'',v.agentes||'']);await addTabela(td,['','Veículo','Agentes'],y);}cnt++;}
+    for(const item of arr){await addBadge(cnt);await addCard([{rotulo:'Local: ',valor:(item.local||'').toUpperCase()}]);if(item.viaturas?.length){await checkPage(25);addSubViaturas();const td=item.viaturas.map(v=>['',( v.veiculo||'').toUpperCase(),(v.agentes||'').toUpperCase()]);await addTabela(td,['','Veículo','Agentes'],y);}cnt++;}
     await addDiv();
   }
   async function procComLocalChefe(arr,titulo){
     if(!arr||!arr.length)return;
     let cnt=1;await addTxt(titulo,12,mL,true,[46,94,86]);
-    for(const item of arr){await addBadge(cnt);await addCard([{rotulo:'Local: ',valor:(item.local||'').toUpperCase()},{rotulo:'Chefe da Missão: ',valor:(item.chefe||'').toUpperCase()}]);if(item.viaturas?.length){await checkPage(25);addSubViaturas();const td=item.viaturas.map(v=>['',v.veiculo||'',v.agentes||'']);await addTabela(td,['','Veículo','Agentes'],y);}cnt++;}
+    for(const item of arr){await addBadge(cnt);await addCard([{rotulo:'Local: ',valor:(item.local||'').toUpperCase()},{rotulo:'Chefe da Missão: ',valor:(item.chefe||'').toUpperCase()}]);if(item.viaturas?.length){await checkPage(25);addSubViaturas();const td=item.viaturas.map(v=>['', (v.veiculo||'').toUpperCase(),(v.agentes||'').toUpperCase()]);await addTabela(td,['','Veículo','Agentes'],y);}cnt++;}
     await addDiv();
   }
   async function procComando(arr){
     if(!arr||!arr.length)return;
     await checkPage(50);
     let cnt=1;await addTxt('15. Comando',12,mL,true,[46,94,86]);
-    for(const item of arr){await addBadge(cnt);await addCard([{rotulo:'Local: ',valor:(item.local||'').toUpperCase()},{rotulo:'Coordenador: ',valor:(item.coordenador||'').toUpperCase()}]);if(item.viaturas?.length){await checkPage(25);addSubViaturas();const td=item.viaturas.map(v=>['',v.veiculo||'',v.agentes||'']);await addTabela(td,['','Veículo','Agentes'],y);}cnt++;}
+    for(const item of arr){await addBadge(cnt);await addCard([{rotulo:'Local: ',valor:(item.local||'').toUpperCase()},{rotulo:'Coordenador: ',valor:(item.coordenador||'').toUpperCase()}]);if(item.viaturas?.length){await checkPage(25);addSubViaturas();const td=item.viaturas.map(v=>['', (v.veiculo||'').toUpperCase(),(v.agentes||'').toUpperCase()]);await addTabela(td,['','Veículo','Agentes'],y);}cnt++;}
     await addDiv();
   }
   async function procMissao(arr){
     if(!arr||!arr.length)return;
     await checkPage(50);
     let cnt=1;await addTxt('16. Outras Missões',12,mL,true,[46,94,86]);
-    for(const item of arr){await addBadge(cnt);await addCard([{rotulo:'Missão/Evento: ',valor:(item.evento||'').toUpperCase()},{rotulo:'Local: ',valor:(item.local||'').toUpperCase()},{rotulo:'Chefe da Missão: ',valor:(item.chefe||'').toUpperCase()}]);if(item.viaturas?.length){await checkPage(25);addSubViaturas();const td=item.viaturas.map(v=>['',v.veiculo||'',v.agentes||'',v.postoBase||'']);await addTabela(td,['','Veículo','Agentes','Posto Base'],y);}cnt++;}
+    for(const item of arr){await addBadge(cnt);await addCard([{rotulo:'Missão/Evento: ',valor:(item.evento||'').toUpperCase()},{rotulo:'Local: ',valor:(item.local||'').toUpperCase()},{rotulo:'Chefe da Missão: ',valor:(item.chefe||'').toUpperCase()}]);if(item.viaturas?.length){await checkPage(25);addSubViaturas();const td=item.viaturas.map(v=>['', (v.veiculo||'').toUpperCase(),(v.agentes||'').toUpperCase(),(v.postoBase||'').toUpperCase()]);await addTabela(td,['','Veículo','Agentes','Posto Base'],y);}cnt++;}
     await addDiv();
   }
 
