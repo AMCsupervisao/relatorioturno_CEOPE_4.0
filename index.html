@@ -785,11 +785,11 @@ function coletarContainer(id,tipo){
   });
 }
 function coletarViaturas(id){
-  return Array.from(document.getElementById(id).children).map(el=>({veiculo:el.querySelector('select')?.value||'',agentes:el.querySelector('input[type=text]')?.value||''}));
+  return Array.from(document.getElementById(id).children).map(el=>({veiculo:el.querySelector('.vt-input')?.value||'',agentes:el.querySelector('.finput-agentes')?.value||''}));
 }
 function coletarZonaAzul(){
   return Array.from(document.getElementById('zonaAzulContainer').children).map(el=>({
-    rota:el.querySelector('input[type=text]')?.value||'',
+    rota:el.querySelector("input[placeholder='Rota']")?.value||'',
     veiculo:el.querySelector('.vt-input')?.value||'',
     tipo:el.querySelector('.seletor-tipo')?.value||'',
     agentes:el.querySelector('input[placeholder="Digite os nomes dos agentes"]')?.value||''
@@ -799,7 +799,7 @@ function coletarAeroporto(){
   return Array.from(document.getElementById('apoioAeroportoContainer').children).map(el=>({
     veiculo:el.querySelector('.vt-input')?.value||'',
     plataforma:el.querySelector('.seletor-plataforma')?.value||'',
-    agentes:el.querySelector('input[type=text]')?.value||''
+    agentes:el.querySelector('input[placeholder="Digite os nomes dos agentes"]')?.value||''
   }));
 }
 function coletarComLocal(id){
@@ -823,18 +823,18 @@ function coletarComLocalChefe(id){
 }
 function coletarComando(){
   return Array.from(document.getElementById('comandoContainer').children).map(el=>({
-    local:el.querySelector('input:nth-child(1)')?.value||'',
-    coordenador:el.querySelector('input:nth-child(2)')?.value||'',
-    viaturas:Array.from(el.querySelector('.viaturasContainer').children).map(v=>({veiculo:v.querySelector('select')?.value||'',agentes:v.querySelector('input[type=text]')?.value||''}))
+    local:el.querySelector('input[placeholder="Digite o local"]')?.value||'',
+    coordenador:el.querySelector('input[placeholder="Digite o coordenador responsável"]')?.value||'',
+    viaturas:Array.from(el.querySelector('.viaturasContainer').children).map(v=>({veiculo:v.querySelector('.vt-input')?.value||'',agentes:v.querySelector('.finput-agentes')?.value||''}))
   }));
 }
 function coletarMissao(){
   return Array.from(document.getElementById('missaoContainer').children).map(el=>({
-    evento:el.querySelector('input:nth-child(1)')?.value||'',
-    local:el.querySelector('input:nth-child(2)')?.value||'',
-    chefe:el.querySelector('input:nth-child(3)')?.value||'',
+    evento:el.querySelector('input[placeholder="Digite missão ou evento"]')?.value||'',
+    local:el.querySelector('input[placeholder="Digite o local"]')?.value||'',
+    chefe:el.querySelector('input[placeholder="Digite o chefe da missão"]')?.value||'',
     viaturas:Array.from(el.querySelector('.viaturasContainer').children).map(v=>({
-      veiculo:v.querySelector('select')?.value||'',
+      veiculo:v.querySelector('.vt-input')?.value||'',
       agentes:v.querySelector("input[placeholder='Digite os nomes dos agentes']")?.value||'',
       postoBase:v.querySelector("input[placeholder='Digite o Posto Base']")?.value||''
     }))
