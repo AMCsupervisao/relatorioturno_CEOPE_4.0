@@ -632,10 +632,12 @@ async function carregarRelatorio(manual,silent){
     const r=await api('getRelatorio',{data:isoData(G.data),turno:G.turno});
     if(r.data&&r.data.supervisor){
       G.relatorio=r.data;
+      configurarModo(); // re-avaliar bloqueio agora que G.relatorio está populado
       preencherFormulario(r.data);
       renderVisualizacao(r.data);
     } else {
       G.relatorio=null;
+      configurarModo(); // re-avaliar (relatório vazio = liberado para novo)
       limparFormulario();
     }
     const now=new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
@@ -890,11 +892,56 @@ function atualizarContagem(){
   document.getElementById('internos').value=internos;
   document.getElementById('externos').value=externos;
   document.getElementById('totalAgentes').value=internos+externos;
+  verificarDuplicatas();
 }
 
 // ══════════════════════════════════════════════
-// CRIAÇÃO DE ELEMENTOS DINÂMICOS
+// ALERTA DE DUPLICIDADE (VT/MT e Agentes)
 // ══════════════════════════════════════════════
+function verificarDuplicatas(){
+  // Coletar todos os campos VT/MT
+  const vtInputs=Array.from(document.querySelectorAll('#modoEditar .vt-input'));
+  const vtVals={};
+  vtInputs.forEach(inp=>{
+    const v=(inp.value||'').trim().toUpperCase();
+    if(!v)return;
+    if(!vtVals[v])vtVals[v]=[];
+    vtVals[v].push(inp);
+  });
+  vtInputs.forEach(inp=>{
+    const v=(inp.value||'').trim().toUpperCase();
+    const dup=vtVals[v]&&vtVals[v].length>1;
+    inp.style.borderColor=dup?'#f97316':'';
+    inp.title=dup?'⚠️ Prefixo duplicado: '+v:'';
+  });
+
+  // Coletar todos os agentes de todos os campos
+  const agInputs=Array.from(document.querySelectorAll(
+    '#modoEditar .campo-agentes, #modoEditar input[placeholder="Digite os nomes dos agentes"], #modoEditar .finput-agentes, #modoEditar input[id="central"], #modoEditar input[id="ciops"], #modoEditar input[id="sevim"], #modoEditar input[id="cccf"], #modoEditar input[id="coer"], #modoEditar input[id="videomonitoramento"]'
+  ));
+  // Incluir campos internos
+  const internIds=['central','ciops','sevim','sevimOperadores','cccf','coer','videomonitoramento'];
+  const todosAgInputs=[
+    ...internIds.map(id=>document.getElementById(id)).filter(Boolean),
+    ...Array.from(document.querySelectorAll('#modoEditar .campo-agentes, #modoEditar .finput-agentes, #modoEditar input[placeholder="Digite os nomes dos agentes"]'))
+  ];
+  const agVals={};
+  todosAgInputs.forEach(inp=>{
+    const nomes=(inp.value||'').split(',').map(n=>n.trim().toUpperCase()).filter(n=>n.length>1);
+    nomes.forEach(n=>{
+      if(!agVals[n])agVals[n]=[];
+      if(!agVals[n].includes(inp))agVals[n].push(inp);
+    });
+  });
+  todosAgInputs.forEach(inp=>{
+    const nomes=(inp.value||'').split(',').map(n=>n.trim().toUpperCase()).filter(n=>n.length>1);
+    const dups=nomes.filter(n=>agVals[n]&&agVals[n].length>1);
+    inp.style.borderColor=dups.length?'#f97316':'';
+    inp.title=dups.length?'⚠️ Agente(s) duplicado(s): '+dups.join(', '):'';
+  });
+}
+
+
 const vOpts=`<optgroup label="Viaturas">${viaturas.map(v=>`<option>${v}</option>`).join('')}</optgroup><optgroup label="Motocicletas">${motos.map(m=>`<option>${m}</option>`).join('')}</optgroup>`;
 
 function criarViaturaSimples(){
@@ -1182,22 +1229,22 @@ function renderVisualizacao(d){
     if(!arr||!arr.length)return'<span class="view-empty">Nenhum dado informado</span>';
     return arr.map((r,idx)=>{
       const rows=campos.map(c=>{
-        const key=c.key||c;const label=c.label||key;const val=r[key]||'';
+        const key=c.key||c;const label=c.label||key;const val=(r[key]||'').toUpperCase();
         return val?`<div class="view-card-row"><span class="view-card-label">${label}</span><span class="view-card-val">${val}</span></div>`:'';
       }).join('');
       const hasPosto=(r.viaturas||[]).some(v=>v.postoBase);
-      const vit=(r.viaturas||[]).map((v,i)=>`<tr><td>${i+1}</td><td>${v.veiculo||'—'}</td><td>${v.agentes||'—'}</td>${hasPosto?`<td>${v.postoBase||'—'}</td>`:''}</tr>`).join('');
+      const vit=(r.viaturas||[]).map((v,i)=>`<tr><td>${i+1}</td><td>${(v.veiculo||'—').toUpperCase()}</td><td>${(v.agentes||'—').toUpperCase()}</td>${hasPosto?`<td>${(v.postoBase||'—').toUpperCase()}</td>`:''}</tr>`).join('');
       return`<div class="view-card-item" style="margin-bottom:10px;">${rows}${vit?`<div class="viaturas-sub" style="margin-top:8px;">Viaturas/Motos</div><table class="view-table"><thead><tr><th>#</th><th>Veículo</th><th>Agentes</th>${hasPosto?'<th>Posto Base</th>':''}</tr></thead><tbody>${vit}</tbody></table>`:''}</div>`;
     }).join('');
   };
   const tabela=(arr,cols)=>{
     if(!arr||!arr.length)return'<span class="view-empty">Nenhum dado informado</span>';
     const head=cols.map(c=>`<th>${c}</th>`).join('');
-    const body=arr.map((r,i)=>`<tr><td>${i+1}</td>${cols.slice(1).map(c=>{ let v='—'; if(c==='Rota')v=r.rota||'—'; else if(c==='Veículo')v=r.veiculo||'—'; else if(c==='Agentes')v=r.agentes||'—'; else if(c==='Veículo (Tipo)')v=`${r.veiculo||''} (${r.tipo||''})`; else if(c==='Veículo (Plataforma)')v=`${r.veiculo||''} (${r.plataforma||''})`; return`<td>${v}</td>`;}).join('')}</tr>`).join('');
+    const body=arr.map((r,i)=>`<tr><td>${i+1}</td>${cols.slice(1).map(c=>{ let v='—'; if(c==='Rota')v=(r.rota||'—').toUpperCase(); else if(c==='Veículo')v=(r.veiculo||'—').toUpperCase(); else if(c==='Agentes')v=(r.agentes||'—').toUpperCase(); else if(c==='Veículo (Tipo)')v=`${(r.veiculo||'').toUpperCase()} (${(r.tipo||'').toUpperCase()})`; else if(c==='Veículo (Plataforma)')v=`${(r.veiculo||'').toUpperCase()} (${(r.plataforma||'').toUpperCase()})`; return`<td>${v}</td>`;}).join('')}</tr>`).join('');
     return`<table class="view-table"><thead><tr>${head}</tr></thead><tbody>${body}</tbody></table>`;
   };
   const sec=(titulo,conteudo)=>`<div class="view-sec"><div class="view-sec-title">${titulo}</div>${conteudo}</div>`;
-  const campo=(label,val)=>val?`<div style="margin-bottom:6px;"><span class="view-field-label">${label}</span><div class="view-field">${val}</div></div>`:'';
+  const campo=(label,val)=>val?`<div style="margin-bottom:6px;"><span class="view-field-label">${label}</span><div class="view-field">${val.toUpperCase()}</div></div>`:'';
 
   el.innerHTML=`
     <div class="view-header">
@@ -1257,7 +1304,7 @@ async function gerarPDF(){
   async function procTabela(arr,titulo,hasRota=false,cols=['#','Rota','Veículo','Agentes']){
     if(!arr||!arr.length)return;
     await checkPage(40);
-    await addTxt(titulo,12,mL,true,[76,175,80]);
+    await addTxt(titulo,12,mL,true,[46,94,86]);
     const td=arr.map((r,i)=>{
       if(titulo.includes('Zona Azul'))return[i+1,r.rota||'',`${r.veiculo||''} (${r.tipo||''})`,r.agentes||''];
       if(titulo.includes('Aeroporto'))return[i+1,`${r.veiculo||''} (${r.plataforma||''})`,r.agentes||''];
