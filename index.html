@@ -419,29 +419,39 @@ function criarVtInput(valorInicial){
   const drop=wrap.querySelector('.vt-drop');
   inp.addEventListener('input',function(){
     const q=this.value.toUpperCase().trim();
-    const filtrados=q?todosVeiculos.filter(v=>v.includes(q)).slice(0,20):todosVeiculos.slice(0,20);
+    const filtrados=q?todosVeiculos.filter(v=>v.includes(q)):todosVeiculos;
     drop.innerHTML=filtrados.map(v=>`<div>${v}</div>`).join('');
     drop.classList.toggle('open',filtrados.length>0);
     agendarAutoSave();
   });
   inp.addEventListener('focus',function(){
     const q=this.value.toUpperCase().trim();
-    const filtrados=q?todosVeiculos.filter(v=>v.includes(q)).slice(0,20):todosVeiculos.slice(0,20);
+    const filtrados=q?todosVeiculos.filter(v=>v.includes(q)):todosVeiculos;
     drop.innerHTML=filtrados.map(v=>`<div>${v}</div>`).join('');
     drop.classList.add('open');
   });
   inp.addEventListener('blur',function(){setTimeout(()=>drop.classList.remove('open'),200);});
+  function selecionarVt(valor){
+    // Verificar duplicata antes de aceitar
+    const todos=Array.from(document.querySelectorAll('#modoEditar .vt-input'));
+    const jaUsado=todos.some(el=>el!==inp&&el.value.trim().toUpperCase()===valor.toUpperCase());
+    if(jaUsado){
+      toast('⚠️ '+valor+' já está em uso em outro campo!','err');
+      return;
+    }
+    inp.value=valor;drop.classList.remove('open');agendarAutoSave();
+  }
   drop.addEventListener('mousedown',function(e){e.preventDefault();});
   drop.addEventListener('click',function(e){
-    if(e.target.tagName==='DIV'){inp.value=e.target.textContent;drop.classList.remove('open');agendarAutoSave();}
+    if(e.target.tagName==='DIV'){selecionarVt(e.target.textContent);}
   });
   let _vtTouchStartY=0;
   drop.addEventListener('touchstart',function(e){_vtTouchStartY=e.touches[0].clientY;},{passive:true});
   drop.addEventListener('touchend',function(e){
     if(e.target.tagName==='DIV'){
       const dy=Math.abs(e.changedTouches[0].clientY-_vtTouchStartY);
-      if(dy>8)return; // estava rolando, ignorar
-      e.preventDefault();inp.value=e.target.textContent;drop.classList.remove('open');agendarAutoSave();
+      if(dy>8)return;
+      e.preventDefault();selecionarVt(e.target.textContent);
     }
   },{passive:false});
   return wrap;
@@ -1268,7 +1278,7 @@ function renderVisualizacao(d){
     ${sec('15. Comando',fmtArr(d.comando,[{label:'Local',key:'local'},{label:'Coordenador',key:'coordenador'}]))}
     ${sec('16. Outras Missões',fmtArr(d.missao,[{label:'Missão/Evento',key:'evento'},{label:'Local',key:'local'},{label:'Chefe da Missão',key:'chefe'}]))}
     ${sec('17. Supervisão',tabela(d.supervisao,['#','Rota','Veículo','Agentes']))}
-    ${d.observacoes?sec('18. Observações',`<div class="view-field">${d.observacoes}</div>`):''}
+    ${d.observacoes?sec('18. Observações',`<div class="view-field">${d.observacoes.toUpperCase()}</div>`):''}
     ${d.savedBy?`<div style="font-size:11px;color:var(--text3);text-align:right;margin-top:8px;font-family:'IBM Plex Mono',monospace;">Salvo por ${d.savedBy} · ${d.savedAt?new Date(d.savedAt).toLocaleString('pt-BR'):''}</div>`:''}
   `;
 }
@@ -1277,8 +1287,16 @@ function renderVisualizacao(d){
 // GERAR PDF (mesmo padrão do original)
 // ══════════════════════════════════════════════
 async function gerarPDF(){
+  // Sincronizar dados frescos da nuvem antes de gerar
+  toast('Sincronizando dados...','');
+  try{
+    const r=await api('getRelatorio',{data:isoData(G.data),turno:G.turno});
+    if(r.data&&r.data.supervisor){G.relatorio=r.data;}
+  }catch(ex){toast('Aviso: não foi possível sincronizar. Usando dados locais.','err');}
   const dados=G.relatorio||coletarDados();
   if(!dados.supervisor){toast('Preencha os dados antes de gerar o PDF.','err');return;}
+  const geradoPor=G.name;
+  const geradoEm=new Date().toLocaleString('pt-BR',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit',second:'2-digit'});
   const {jsPDF}=window.jspdf;
   const doc=new jsPDF({orientation:'portrait',unit:'mm',format:'a4'});
   const mL=10,lMax=190,hPag=297,hCab=15,hRod=15;
@@ -1375,6 +1393,10 @@ async function gerarPDF(){
     doc.setTextColor(0,0,0);doc.setFontSize(10);doc.text(ls,mL+pad,y+pad+3);y+=hC+5;
   }
   await addRod();
+  // Rodapé de geração — quem gerou e quando
+  const txtGer=`Gerado por ${geradoPor} · ${geradoEm}`;
+  doc.setFont('helvetica','italic');doc.setFontSize(7.5);doc.setTextColor(120);
+  doc.text(txtGer,mL,hPag-2);
   doc.save(fileName);
   toast('PDF gerado! ✓','ok');
 }
