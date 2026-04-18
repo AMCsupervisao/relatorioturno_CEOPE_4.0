@@ -201,7 +201,7 @@ body{font-family:'IBM Plex Sans',sans-serif;background:var(--navy);color:var(--t
     </div>
     <div class="lsub">Relatório Operacional de Turno</div>
     <div class="fg"><label>Perfil de Acesso</label>
-      <select id="loginRole"><option value="">Selecione seu perfil...</option><option value="admin">Administrador</option><option value="supervisor">Supervisor</option><option value="central">Central de Operações</option><option value="chefia">Chefia</option></select>
+      <select id="loginRole"><option value="">Selecione seu perfil...</option><option value="admin">Administrador</option><option value="supervisor">Supervisor do Turno</option><option value="central">Central de Operações</option><option value="chefia">Chefia</option></select>
     </div>
     <div class="fg" id="lnameGroup" style="display:none;"><label>Identificação (nome de guerra)</label><input type="text" id="loginName" placeholder="Seu nome..."></div>
     <div class="fg"><label>Senha de Acesso</label><input type="password" id="loginPass" placeholder="••••••••" autocomplete="current-password"></div>
@@ -360,7 +360,7 @@ body{font-family:'IBM Plex Sans',sans-serif;background:var(--navy);color:var(--t
       <label style="font-size:11px;font-weight:700;letter-spacing:1px;color:var(--text3);text-transform:uppercase;display:block;margin-bottom:6px;">Perfil</label>
       <select id="spPerfil" style="width:100%;padding:13px;background:var(--navy2);border:1px solid var(--border2);border-radius:8px;color:var(--text);font-size:15px;outline:none;-webkit-appearance:none;">
         <option value="admin">Administrador</option>
-        <option value="supervisor">Supervisor</option>
+        <option value="supervisor">Supervisor do Turno</option>
         <option value="central">Central</option>
         <option value="chefia">Chefia</option>
       </select>
@@ -390,7 +390,7 @@ body{font-family:'IBM Plex Sans',sans-serif;background:var(--navy);color:var(--t
 const SCRIPT_URL='https://script.google.com/macros/s/AKfycbxONfbZ3_kO-FlK-yQZapPa1J5gxt5frzX_J7mmG22r755ANho2bwc3OgBJuTyJ0PxT/exec';
 const LS={session:'amc_rel_session',agentes:'agentesPersonalizados',rotas:'rotasPersonalizadas'};
 const DPW={admin:'admin2026',supervisor:'sup2026',central:'ceope2026',chefia:'chefia2026'};
-const RL={admin:'Administrador',supervisor:'Supervisor',central:'Central CEOPE',chefia:'Chefia'};
+const RL={admin:'Administrador',supervisor:'Supervisor do Turno',central:'Central CEOPE',chefia:'Chefia'};
 const RC={admin:'ra',supervisor:'rs',central:'rc',chefia:'rc'};
 
 let G={
