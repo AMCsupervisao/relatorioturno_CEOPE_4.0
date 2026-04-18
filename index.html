@@ -1396,7 +1396,7 @@ async function gerarPDF(){
   // Rodapé de geração — quem gerou e quando
   const txtGer=`Gerado por ${geradoPor} · ${geradoEm}`;
   doc.setFont('helvetica','italic');doc.setFontSize(7.5);doc.setTextColor(120);
-  doc.text(txtGer,mL,hPag-2);
+  doc.text(txtGer,mL,hPag-7);
   doc.save(fileName);
   toast('PDF gerado! ✓','ok');
 }
