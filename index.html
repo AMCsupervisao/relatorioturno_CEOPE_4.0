@@ -201,7 +201,7 @@ body{font-family:'IBM Plex Sans',sans-serif;background:var(--navy);color:var(--t
     </div>
     <div class="lsub">Relatório Operacional de Turno</div>
     <div class="fg"><label>Perfil de Acesso</label>
-      <select id="loginRole"><option value="">Selecione seu perfil...</option><option value="admin">Administrador</option><option value="supervisor">Supervisor</option><option value="central">Central de Operações</option></select>
+      <select id="loginRole"><option value="">Selecione seu perfil...</option><option value="admin">Administrador</option><option value="supervisor">Supervisor</option><option value="central">Central de Operações</option><option value="chefia">Chefia</option></select>
     </div>
     <div class="fg" id="lnameGroup" style="display:none;"><label>Identificação (nome de guerra)</label><input type="text" id="loginName" placeholder="Seu nome..."></div>
     <div class="fg"><label>Senha de Acesso</label><input type="password" id="loginPass" placeholder="••••••••" autocomplete="current-password"></div>
@@ -362,6 +362,7 @@ body{font-family:'IBM Plex Sans',sans-serif;background:var(--navy);color:var(--t
         <option value="admin">Administrador</option>
         <option value="supervisor">Supervisor</option>
         <option value="central">Central</option>
+        <option value="chefia">Chefia</option>
       </select>
     </div>
     <div style="margin-bottom:12px;">
@@ -388,9 +389,9 @@ body{font-family:'IBM Plex Sans',sans-serif;background:var(--navy);color:var(--t
 // ══════════════════════════════════════════════
 const SCRIPT_URL='https://script.google.com/macros/s/AKfycbxONfbZ3_kO-FlK-yQZapPa1J5gxt5frzX_J7mmG22r755ANho2bwc3OgBJuTyJ0PxT/exec';
 const LS={session:'amc_rel_session',agentes:'agentesPersonalizados',rotas:'rotasPersonalizadas'};
-const DPW={admin:'admin2026',supervisor:'sup2026',central:'ceope2026'};
-const RL={admin:'Administrador',supervisor:'Supervisor',central:'Central CEOPE'};
-const RC={admin:'ra',supervisor:'rs',central:'rc'};
+const DPW={admin:'admin2026',supervisor:'sup2026',central:'ceope2026',chefia:'chefia2026'};
+const RL={admin:'Administrador',supervisor:'Supervisor',central:'Central CEOPE',chefia:'Chefia'};
+const RC={admin:'ra',supervisor:'rs',central:'rc',chefia:'rc'};
 
 let G={
   role:null,name:'',
@@ -480,7 +481,7 @@ async function doLogin(){
   const err=document.getElementById('loginErr');
   const btn=document.getElementById('btnLogin');
   if(!role){err.textContent='Selecione um perfil.';err.style.display='block';return;}
-  if(!name&&role!=='central'){err.textContent='Informe seu nome de guerra.';err.style.display='block';return;}
+  if(!name&&role!=='central'&&role!=='chefia'){err.textContent='Informe seu nome de guerra.';err.style.display='block';return;}
   btn.textContent='Verificando...';btn.disabled=true;
   // Tentar buscar senhas da planilha
   try{const r=await api('getPasswords',{});if(r.data)G.pw={...DPW,...r.data};}catch(e){}
